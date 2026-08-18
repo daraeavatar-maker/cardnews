@@ -15,28 +15,41 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;min-height:100vh;}
+  .setup-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+  .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:420px;}
+  .setup-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .setup-mark{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .setup-title{font-size:18px;font-weight:700;}
+  .setup-sub{font-size:13px;color:var(--sub);margin-top:2px;}
+  .setup-label{font-size:12px;color:var(--sub);margin-bottom:8px;}
+  .setup-desc{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+  .setup-inp{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:monospace;font-size:13px;outline:none;margin-bottom:8px;}
+  .setup-inp:focus{border-color:var(--accent-b);}
+  .setup-inp::placeholder{color:var(--muted);}
+  .setup-err{font-size:12px;color:var(--danger);margin-bottom:12px;display:none;}
+  .setup-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
+  .setup-hint{font-size:11px;color:var(--muted);margin-top:12px;text-align:center;}
+  .setup-hint a{color:var(--accent);text-decoration:none;}
+  .app-screen{display:none;}
   .layout{display:flex;min-height:100vh;}
-  .sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .sidebar{width:200px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;}
   .main{flex:1;padding:28px 32px;}
-  .logo{display:flex;align-items:center;gap:10px;padding:0 4px;}
+  .logo{display:flex;align-items:center;gap:10px;}
   .logo-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;}
   .logo-text{font-size:14px;font-weight:700;}
   .logo-sub{font-size:11px;color:var(--sub);}
   .s-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:0 6px;margin-bottom:2px;}
   .s-section{display:flex;flex-direction:column;gap:4px;}
-  .acct-btn{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--rs);border:1px solid transparent;cursor:pointer;background:transparent;color:var(--sub);font-family:inherit;font-size:13px;text-align:left;transition:all .15s;width:100%;}
+  .acct-btn{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--rs);border:1px solid transparent;cursor:pointer;background:transparent;color:var(--sub);font-family:inherit;font-size:13px;text-align:left;width:100%;transition:all .15s;}
   .acct-btn:hover{background:var(--surface2);color:var(--text);}
   .acct-btn.active{background:var(--accent-l);border-color:var(--accent-b);color:var(--text);}
   .acct-icon{font-size:16px;flex-shrink:0;}
   .acct-name{font-weight:500;font-size:13px;}
   .acct-desc{font-size:11px;color:var(--muted);}
   .acct-btn.active .acct-desc{color:var(--sub);}
-  .api-wrap{margin-top:auto;}
-  .api-lbl{font-size:11px;color:var(--muted);margin-bottom:5px;}
-  .api-inp{width:100%;padding:7px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:monospace;font-size:11px;outline:none;}
-  .api-inp:focus{border-color:var(--accent-b);}
-  .api-hint{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5;}
-  .api-hint a{color:var(--accent);text-decoration:none;}
+  .sidebar-bottom{margin-top:auto;}
+  .reset-btn{padding:6px 8px;border:1px solid var(--border);border-radius:var(--rs);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:left;}
+  .reset-btn:hover{color:var(--danger);border-color:rgba(224,90,90,.3);}
   .page-title{font-size:20px;font-weight:700;letter-spacing:-.03em;margin-bottom:3px;}
   .page-sub{font-size:13px;color:var(--sub);margin-bottom:22px;}
   .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:16px;}
@@ -52,32 +65,33 @@
   .plat-btn{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
   .plat-btn:hover{border-color:var(--border-h);color:var(--text);}
   .plat-btn.active{border-color:var(--accent-b);background:var(--accent-l);color:var(--text);}
-  .gen-btn{padding:9px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;white-space:nowrap;flex-shrink:0;}
+  .gen-btn{padding:9px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;}
   .gen-btn:hover{opacity:.88;}
   .gen-btn:disabled{opacity:.4;cursor:not-allowed;}
   .err-bar{background:rgba(224,90,90,.1);border:1px solid rgba(224,90,90,.3);border-radius:var(--rs);padding:9px 12px;color:var(--danger);font-size:13px;margin-bottom:14px;display:none;}
-  .loading{display:none;align-items:center;gap:10px;padding:20px 0;color:var(--sub);font-size:13px;}
-  .spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .7s linear infinite;}
+  .loading{display:none;flex-direction:column;gap:8px;padding:20px 0;}
+  .loading-text{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:10px;}
+  .spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .7s linear infinite;flex-shrink:0;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .preview{display:none;}
-  .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .sec-title{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
-  .copy-all{padding:5px 12px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
-  .copy-all:hover{background:var(--surface2);color:var(--text);}
-  .slides-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-  .s-thumb{flex-shrink:0;width:155px;height:155px;border-radius:10px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
-  .s-thumb.active{border-color:var(--accent)!important;}
-  .t-num{font-size:9px;font-weight:500;opacity:.5;}
-  .t-title{font-size:11px;font-weight:500;line-height:1.4;margin-top:4px;}
-  .t-body{font-size:10px;line-height:1.4;opacity:.7;margin-top:3px;}
-  .t-tag{font-size:9px;opacity:.4;}
-  .detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:14px;}
-  .d-num{font-size:11px;color:var(--muted);margin-bottom:8px;}
-  .d-title{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;line-height:1.5;margin-bottom:10px;letter-spacing:-.02em;}
-  .d-body{font-size:14px;color:var(--sub);line-height:1.8;margin-bottom:12px;white-space:pre-wrap;}
-  .d-tag{font-size:12px;color:var(--accent);opacity:.85;}
-  .act-row{display:flex;gap:7px;flex-wrap:wrap;}
-  .act-btn{padding:7px 14px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
+  .dl-all-btn{padding:6px 14px;border:1px solid var(--accent-b);border-radius:var(--rs);background:var(--accent-l);color:var(--text);font-family:inherit;font-size:12px;cursor:pointer;}
+  .dl-all-btn:hover{background:var(--accent);color:#fff;}
+  .cards-grid{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .card-wrap{flex-shrink:0;display:flex;flex-direction:column;gap:8px;align-items:center;}
+  .card-canvas{border-radius:10px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;display:block;}
+  .card-canvas:hover{border-color:var(--accent-b);}
+  .card-canvas.active{border-color:var(--accent);}
+  .card-dl-btn{padding:5px 14px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:center;}
+  .card-dl-btn:hover{background:var(--surface2);color:var(--text);}
+  .detail-text{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-top:16px;}
+  .d-num{font-size:11px;color:var(--muted);margin-bottom:6px;}
+  .d-title{font-size:17px;font-weight:700;line-height:1.5;margin-bottom:8px;}
+  .d-body{font-size:14px;color:var(--sub);line-height:1.8;margin-bottom:10px;white-space:pre-wrap;}
+  .d-tag{font-size:12px;color:var(--accent);}
+  .act-row{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
+  .act-btn{padding:7px 14px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;}
   .act-btn:hover{background:var(--surface2);color:var(--text);}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
@@ -91,167 +105,258 @@
 </style>
 </head>
 <body>
-<div class="layout">
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-mark">🌱</div>
-      <div><div class="logo-text">카드뉴스</div><div class="logo-sub">생성기</div></div>
-    </div>
-    <div class="s-section">
-      <div class="s-label">계정</div>
-      <button class="acct-btn active" onclick="selAcct('avatarcourse')" id="btn-avatarcourse">
-        <span class="acct-icon">🌱</span>
-        <div><div class="acct-name">아봐타코스</div><div class="acct-desc">의식계발교육</div></div>
-      </button>
-      <button class="acct-btn" onclick="selAcct('koreansl')" id="btn-koreansl">
-        <span class="acct-icon">🤟</span>
-        <div><div class="acct-name">한국수어</div><div class="acct-desc">수어 교육</div></div>
-      </button>
-      <button class="acct-btn" onclick="selAcct('digital')" id="btn-digital">
-        <span class="acct-icon">💻</span>
-        <div><div class="acct-name">디지털교육</div><div class="acct-desc">디지털 리터러시</div></div>
-      </button>
-      <button class="acct-btn" onclick="selAcct('selfdev')" id="btn-selfdev">
-        <span class="acct-icon">✨</span>
-        <div><div class="acct-name">자기계발</div><div class="acct-desc">좋은글·동기부여</div></div>
-      </button>
-    </div>
-    <div class="api-wrap">
-      <div class="api-lbl">🔑 API Key</div>
-      <input class="api-inp" type="password" id="apiKey" placeholder="sk-ant-..."/>
-      <div class="api-hint"><a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>에서 발급</div>
-    </div>
-  </aside>
 
-  <main class="main">
-    <div class="page-title">카드뉴스 생성기</div>
-    <div class="page-sub">주제와 플랫폼을 선택하면 저장·공유되는 콘텐츠를 만들어드려요.</div>
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">
+      <div class="setup-mark">🌱</div>
+      <div><div class="setup-title">카드뉴스 생성기</div><div class="setup-sub">처음 한 번만 설정하면 돼요</div></div>
+    </div>
+    <div class="setup-label">Anthropic API Key</div>
+    <div class="setup-desc">키는 이 브라우저에만 저장되고 외부로 전송되지 않아요.</div>
+    <input class="setup-inp" type="password" id="setupKey" placeholder="sk-ant-..."/>
+    <div class="setup-err" id="setupErr"></div>
+    <button class="setup-btn" onclick="saveKey()">저장하고 시작하기</button>
+    <div class="setup-hint"><a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>에서 API 키 발급</div>
+  </div>
+</div>
 
-    <div class="form-card">
-      <div class="form-row">
-        <div class="fg">
-          <div class="f-lbl">주제</div>
-          <input class="f-inp" id="topicInput" placeholder="예: 9월 아봐타코스 일정 안내"/>
+<div class="app-screen" id="appScreen">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">🌱</div>
+        <div><div class="logo-text">카드뉴스</div><div class="logo-sub">생성기</div></div>
+      </div>
+      <div class="s-section">
+        <div class="s-label">계정</div>
+        <button class="acct-btn active" onclick="selAcct('avatarcourse')" id="btn-avatarcourse">
+          <span class="acct-icon">🌱</span>
+          <div><div class="acct-name">아봐타코스</div><div class="acct-desc">의식계발교육</div></div>
+        </button>
+        <button class="acct-btn" onclick="selAcct('koreansl')" id="btn-koreansl">
+          <span class="acct-icon">🤟</span>
+          <div><div class="acct-name">한국수어</div><div class="acct-desc">수어 교육</div></div>
+        </button>
+        <button class="acct-btn" onclick="selAcct('digital')" id="btn-digital">
+          <span class="acct-icon">💻</span>
+          <div><div class="acct-name">디지털교육</div><div class="acct-desc">디지털 리터러시</div></div>
+        </button>
+        <button class="acct-btn" onclick="selAcct('selfdev')" id="btn-selfdev">
+          <span class="acct-icon">✨</span>
+          <div><div class="acct-name">자기계발</div><div class="acct-desc">좋은글·동기부여</div></div>
+        </button>
+      </div>
+      <div class="sidebar-bottom">
+        <button class="reset-btn" onclick="resetKey()">🔑 키 변경 / 초기화</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="page-title">카드뉴스 생성기</div>
+      <div class="page-sub">주제와 플랫폼을 선택하면 배경 이미지가 포함된 카드뉴스를 만들어드려요.</div>
+      <div class="form-card">
+        <div class="form-row">
+          <div class="fg">
+            <div class="f-lbl">주제</div>
+            <input class="f-inp" id="topicInput" placeholder="예: 9월 아봐타코스를 참석해야 하는 이유"/>
+          </div>
+          <div class="fg" style="max-width:88px">
+            <div class="f-lbl">슬라이드</div>
+            <select class="f-sel" id="slideCount">
+              <option value="3">3장</option>
+              <option value="4">4장</option>
+              <option value="5" selected>5장</option>
+              <option value="6">6장</option>
+              <option value="7">7장</option>
+            </select>
+          </div>
+          <button class="gen-btn" id="genBtn" onclick="generate()">생성하기</button>
         </div>
-        <div class="fg" style="max-width:88px">
-          <div class="f-lbl">슬라이드</div>
-          <select class="f-sel" id="slideCount">
-            <option value="3">3장</option>
-            <option value="4">4장</option>
-            <option value="5" selected>5장</option>
-            <option value="6">6장</option>
-            <option value="7">7장</option>
-          </select>
+        <div class="platform-row">
+          <span style="font-size:11px;color:var(--muted);align-self:center">플랫폼:</span>
+          <button class="plat-btn active" onclick="selPlat(this,'instagram')">인스타그램</button>
+          <button class="plat-btn" onclick="selPlat(this,'naver_blog')">네이버 블로그</button>
+          <button class="plat-btn" onclick="selPlat(this,'clip')">클립</button>
+          <button class="plat-btn" onclick="selPlat(this,'threads')">스레드</button>
         </div>
-        <button class="gen-btn" id="genBtn" onclick="generate()">생성하기</button>
       </div>
-      <div class="platform-row">
-        <span style="font-size:11px;color:var(--muted);align-self:center">플랫폼:</span>
-        <button class="plat-btn active" onclick="selPlat(this,'instagram')">인스타그램</button>
-        <button class="plat-btn" onclick="selPlat(this,'naver_blog')">네이버 블로그</button>
-        <button class="plat-btn" onclick="selPlat(this,'clip')">클립</button>
-        <button class="plat-btn" onclick="selPlat(this,'threads')">스레드</button>
+      <div class="err-bar" id="errBar"></div>
+      <div class="loading" id="loading">
+        <div class="loading-text"><div class="spinner"></div><span id="loadingMsg">콘텐츠 생성 중...</span></div>
       </div>
-    </div>
 
-    <div class="err-bar" id="errBar"></div>
-    <div class="loading" id="loading"><div class="spinner"></div><span>콘텐츠 생성 중...</span></div>
-
-    <div class="preview" id="preview">
-      <div class="sec-hd">
-        <span class="sec-title" id="prevLabel">미리보기</span>
-        <button class="copy-all" onclick="copyAll()">전체 복사</button>
+      <div class="preview" id="preview">
+        <div class="sec-hd">
+          <span class="sec-title" id="prevLabel">카드 이미지</span>
+          <button class="dl-all-btn" onclick="downloadAll()">전체 다운로드</button>
+        </div>
+        <div class="cards-grid" id="cardsGrid"></div>
+        <div class="detail-text" id="detailText"></div>
+        <div class="act-row">
+          <button class="act-btn" onclick="generate()">↺ 다시 생성</button>
+          <button class="act-btn" onclick="copyAll()">전체 텍스트 복사</button>
+        </div>
       </div>
-      <div class="slides-scroll" id="slidesScroll"></div>
-      <div class="detail" id="detail"></div>
-      <div class="act-row">
-        <button class="act-btn" onclick="generate()">↺ 다시 생성</button>
-        <button class="act-btn" onclick="copySlide()">현재 슬라이드 복사</button>
-      </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
+const CARD_SIZE = 1080;
+ // Unsplash API 키 (무료)
+
 const ACCOUNTS = {
-  avatarcourse:{name:'아봐타코스',slides:5,style:{bg:'#1a1a2e',text:'#e8e0f0',sub:'#a89cc8'},
-    tone:`계정 성격: 아봐타(Avatar) 의식계발 교육 전문 계정.
+  avatarcourse:{name:'아봐타코스',slides:5,
+    canvas:{accent:'#9b7de8',text:'#ffffff',sub:'rgba(255,255,255,0.85)',tag:'rgba(155,125,232,0.9)',overlay:'rgba(10,5,30,0.62)'},
+    unsplash:'meditation consciousness spiritual mind',
+    tone:`계정: 아봐타(Avatar) 의식계발 교육 전문.
 어조: 철학적이고 깊은 통찰. 독자의 내면에 질문을 던지는 방식. 묵직하고 진중하게.
-핵심: 아봐타 교육의 원리(신념 탐구, 의식 확장, 삶의 창조)와 연결된 메시지.`},
-  koreansl:{name:'한국수어',slides:4,style:{bg:'#0d2137',text:'#d8edf8',sub:'#6aaed4'},
-    tone:`계정 성격: 한국수어 교육 및 접근성 증진 계정.
-어조: 친근하고 따뜻하며 명확한 교육적 어조. 수어의 아름다움과 필요성 강조.
+핵심: 신념 탐구, 의식 확장, 삶의 창조와 연결된 메시지.`},
+  koreansl:{name:'한국수어',slides:4,
+    canvas:{accent:'#4aa8e0',text:'#ffffff',sub:'rgba(255,255,255,0.85)',tag:'rgba(74,168,224,0.9)',overlay:'rgba(5,20,40,0.60)'},
+    unsplash:'sign language communication hands people',
+    tone:`계정: 한국수어 교육 및 접근성 증진.
+어조: 친근하고 따뜻하며 명확한 교육적 어조.
 핵심: 누구나 배울 수 있다는 접근성, 소통의 가치.`},
-  digital:{name:'디지털교육',slides:5,style:{bg:'#0a1628',text:'#c8dff5',sub:'#5a9fd4'},
-    tone:`계정 성격: 디지털 리터러시 및 IT 교육 계정.
+  digital:{name:'디지털교육',slides:5,
+    canvas:{accent:'#00c8f0',text:'#ffffff',sub:'rgba(255,255,255,0.85)',tag:'rgba(0,200,240,0.9)',overlay:'rgba(0,10,30,0.65)'},
+    unsplash:'technology digital future innovation computer',
+    tone:`계정: 디지털 리터러시 및 IT 교육.
 어조: 세련되고 실용적. 복잡한 개념을 쉽게 풀어주는 방식.
 핵심: 당장 써먹을 수 있는 정보, 미래 준비.`},
-  selfdev:{name:'자기계발',slides:6,style:{bg:'#1c1408',text:'#f5e8cc',sub:'#c9a464'},
-    tone:`계정 성격: 자기계발·동기부여·좋은글 수익화 계정.
+  selfdev:{name:'자기계발',slides:6,
+    canvas:{accent:'#f0b040',text:'#ffffff',sub:'rgba(255,255,255,0.85)',tag:'rgba(240,176,64,0.9)',overlay:'rgba(15,8,0,0.58)'},
+    unsplash:'motivation success growth nature sunrise',
+    tone:`계정: 자기계발·동기부여·좋은글 수익화.
 어조: 따뜻하고 공감을 이끌어내는 어조. 읽는 순간 저장하고 싶은 문장.
 핵심: 삶의 지혜, 변화 동기, 실천 가능한 조언.`}
 };
 
 const PLAT = {
-  instagram:{name:'인스타그램',
-    prompt:`플랫폼: 인스타그램
-알고리즘 핵심: 저장률과 공유율이 도달률을 결정한다.
-콘텐츠 전략:
-- 1번 슬라이드: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹
-- 중간 슬라이드: 실제로 유용하거나 깊은 통찰 — 저장 이유를 만들어라
-- 마지막 슬라이드: "저장해두세요" 또는 "공유하면 도움이 될 사람이 있나요?" 직접 유도
-해시태그: 대중 태그 1개 + 중간 태그 1개 + 계정 특화 태그 1개 조합`},
-  naver_blog:{name:'네이버 블로그',
-    prompt:`플랫폼: 네이버 블로그 (카드뉴스 형식)
+  instagram:{name:'인스타그램',prompt:`플랫폼: 인스타그램
+알고리즘 핵심: 저장률과 공유율이 도달률을 결정.
+전략:
+- 1번: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹
+- 중간: 실제로 유용하거나 깊은 통찰 — 저장 이유를 만들어라
+- 마지막: "저장해두세요" 또는 "공유하면 도움이 될 사람이 있나요?" 직접 유도
+해시태그: 대중 태그 1개 + 중간 태그 1개 + 계정 특화 태그 1개`},
+  naver_blog:{name:'네이버 블로그',prompt:`플랫폼: 네이버 블로그
 알고리즘 핵심: 검색 키워드 노출 + 체류시간.
-콘텐츠 전략:
+전략:
 - 1번: 검색할 법한 키워드가 자연스럽게 포함된 제목
 - 중간: 정보성 강조, 구체적 수치나 예시 포함
 - 마지막: 댓글·구독 유도, 다음 콘텐츠 예고
-해시태그: 검색량 높은 키워드 중심 태그`},
-  clip:{name:'클립',
-    prompt:`플랫폼: 네이버 클립 (숏폼)
+해시태그: 검색량 높은 키워드 중심`},
+  clip:{name:'클립',prompt:`플랫폼: 네이버 클립
 알고리즘 핵심: 첫 1초 이탈률, 완주율.
-콘텐츠 전략:
+전략:
 - 1번: 0.5초 안에 멈추게 하는 강렬한 한 문장 후킹
-- 중간: 빠른 템포, 짧고 강한 문장. 호기심 연결
+- 중간: 빠른 템포, 짧고 강한 문장
 - 마지막: 강한 반전 or 핵심 한 줄 요약
 해시태그: 트렌드 키워드 중심`},
-  threads:{name:'스레드',
-    prompt:`플랫폼: 스레드(Threads)
+  threads:{name:'스레드',prompt:`플랫폼: 스레드(Threads)
 알고리즘 핵심: 댓글과 공유 — 대화를 유발하라.
-콘텐츠 전략:
+전략:
 - 1번: 논쟁적이거나 공감되는 질문으로 시작
 - 중간: 대화체, 친구에게 말하듯 자연스럽게
 - 마지막: 의견을 묻거나 공유를 유도하는 열린 마무리
 해시태그: 최소화 (1~2개만)`}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', slides=[], selIdx=0;
+let curAcct='avatarcourse', curPlat='instagram', slides=[], selIdx=0, canvases=[];
 
+window.addEventListener('load',()=>{
+  const k=localStorage.getItem('cnews_key');
+  if(k) showApp(); else showSetup();
+});
+
+function showSetup(){
+  document.getElementById('setupScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+}
+function showApp(){
+  document.getElementById('setupScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+}
+function saveKey(){
+  const k=document.getElementById('setupKey').value.trim();
+  const err=document.getElementById('setupErr');
+  if(!k||!k.startsWith('sk-ant-')){
+    err.textContent='올바른 API 키를 입력해주세요. (sk-ant- 로 시작)';
+    err.style.display='block'; return;
+  }
+  localStorage.setItem('cnews_key',k);
+  showApp(); showToast('API 키가 저장됐어요!');
+}
+function resetKey(){
+  if(confirm('API 키를 초기화할까요?')){
+    localStorage.removeItem('cnews_key');
+    document.getElementById('setupKey').value='';
+    document.getElementById('setupErr').style.display='none';
+    showSetup();
+  }
+}
 function selAcct(id){
   curAcct=id;
   document.querySelectorAll('.acct-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-'+id).classList.add('active');
   document.getElementById('slideCount').value=ACCOUNTS[id].slides;
-  if(slides.length) renderPreview();
+  if(slides.length){renderCards();renderDetail();}
 }
-
 function selPlat(el,id){
   curPlat=id;
   document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
 }
 
+function setLoading(msg){
+  document.getElementById('loadingMsg').textContent=msg;
+}
+
+const UNSPLASH_KEY = 'YOUR_ACCESS_KEY_HERE'; // ← 여기에 Access Key 입력
+
+async function fetchUnsplashImages(query, count){
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&count=${count}&orientation=squarish`,
+      { headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
+    );
+    if(!res.ok) throw new Error('Unsplash 오류');
+    const data = await res.json();
+    return data.map(p => p.urls.regular);
+  } catch(e) {
+    let hash = 0;
+    for (let i = 0; i < query.length; i++) { hash = ((hash << 5) - hash) + query.charCodeAt(i); hash |= 0; }
+    const seed = Math.abs(hash) % 1000;
+    return Array.from({length: count}, (_, i) => `https://picsum.photos/seed/${seed+i}/1080/1080`);
+  }
+}
+
+function loadImage(url){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=>resolve(img);
+    img.onerror = ()=>{
+      // 폴백 이미지
+      const fb = new Image();
+      fb.crossOrigin = 'anonymous';
+      fb.onload = ()=>resolve(fb);
+      fb.onerror = ()=>resolve(null);
+      fb.src = `https://picsum.photos/1080/1080?random=${Math.random()}`;
+    };
+    img.src = url;
+  });
+}
+
 async function generate(){
-  const apiKey=document.getElementById('apiKey').value.trim();
+  const apiKey=localStorage.getItem('cnews_key');
   const topic=document.getElementById('topicInput').value.trim();
   const count=parseInt(document.getElementById('slideCount').value);
   const errBar=document.getElementById('errBar');
   errBar.style.display='none';
-
-  if(!apiKey){showErr('API 키를 입력해주세요.');return;}
   if(!topic){showErr('주제를 입력해주세요.');return;}
 
   const btn=document.getElementById('genBtn');
@@ -259,10 +364,12 @@ async function generate(){
   document.getElementById('loading').style.display='flex';
   document.getElementById('preview').style.display='none';
 
-  const a=ACCOUNTS[curAcct];
-  const p=PLAT[curPlat];
+  const a=ACCOUNTS[curAcct], p=PLAT[curPlat];
 
-  const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다. 저장과 공유를 유발하는 카드뉴스를 만들어주세요.
+  try{
+    // 1단계: 텍스트 생성
+    setLoading('슬라이드 내용 생성 중...');
+    const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다.
 
 === 계정 정보 ===
 ${a.tone}
@@ -276,45 +383,202 @@ ${p.prompt}
 
 === 출력 형식 ===
 반드시 순수 JSON만 출력. 마크다운 없이.
-{
-  "slides": [
-    {
-      "num": 1,
-      "title": "제목 (15자 이내, 멈추게 만드는 한 줄)",
-      "body": "본문 (70자 이내, 핵심 메시지. 줄바꿈은 \\n 사용)",
-      "tag": "#태그1 #태그2 #태그3"
-    }
-  ]
-}`;
+{"slides":[{"num":1,"title":"15자 이내","body":"60자 이내. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}
 
-  try{
+imgQuery는 각 슬라이드 내용에 맞는 Unsplash 검색용 영문 키워드 3단어`;
+
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1500,
-        messages:[{role:'user',content:prompt}]
-      })
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
     });
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`오류 ${res.status}`);}
     const data=await res.json();
     const raw=data.content.filter(i=>i.type==='text').map(i=>i.text).join('').trim();
-    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
-    slides=parsed.slides; selIdx=0;
-    renderPreview();
-  }catch(e){
-    showErr('생성 실패: '+e.message);
-  }
+    slides=JSON.parse(raw.replace(/```json|```/g,'').trim()).slides;
+
+    // 2단계: 이미지 로드
+    setLoading('배경 이미지 불러오는 중...');
+    await document.fonts.ready;
+
+    const imgUrls = await Promise.all(
+      slides.map(sl => fetchUnsplashImages(sl.imgQuery || a.unsplash, 1).then(r=>r[0]))
+    );
+    const imgs = await Promise.all(imgUrls.map(url => loadImage(url)));
+
+    // 3단계: 카드 렌더링
+    setLoading('카드 이미지 만드는 중...');
+    canvases = slides.map((sl, i) => drawCard(sl, curAcct, slides.length, imgs[i]));
+    selIdx=0;
+
+    renderCards();
+    renderDetail();
+    document.getElementById('preview').style.display='block';
+    document.getElementById('prevLabel').textContent=`카드 이미지 — ${a.name} · ${PLAT[curPlat].name}`;
+
+  }catch(e){showErr('생성 실패: '+e.message);}
+
   btn.disabled=false; btn.textContent='생성하기';
   document.getElementById('loading').style.display='none';
 }
 
+function drawCard(slide, acctId, total, bgImg){
+  const a=ACCOUNTS[acctId];
+  const c=a.canvas;
+  const canvas=document.createElement('canvas');
+  canvas.width=CARD_SIZE; canvas.height=CARD_SIZE;
+  const ctx=canvas.getContext('2d');
+
+  // 배경 이미지
+  if(bgImg){
+    const scale=Math.max(CARD_SIZE/bgImg.width, CARD_SIZE/bgImg.height);
+    const sw=bgImg.width*scale, sh=bgImg.height*scale;
+    const sx=(CARD_SIZE-sw)/2, sy=(CARD_SIZE-sh)/2;
+    ctx.drawImage(bgImg, sx, sy, sw, sh);
+  } else {
+    ctx.fillStyle='#111';
+    ctx.fillRect(0,0,CARD_SIZE,CARD_SIZE);
+  }
+
+  // 어두운 오버레이
+  ctx.fillStyle=c.overlay;
+  ctx.fillRect(0,0,CARD_SIZE,CARD_SIZE);
+
+  // 하단 그라디언트 (텍스트 가독성)
+  const grad=ctx.createLinearGradient(0,CARD_SIZE*0.35,0,CARD_SIZE);
+  grad.addColorStop(0,'rgba(0,0,0,0)');
+  grad.addColorStop(1,'rgba(0,0,0,0.82)');
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,CARD_SIZE,CARD_SIZE);
+
+  // 상단 액센트 라인
+  ctx.fillStyle=c.accent;
+  ctx.fillRect(0,0,CARD_SIZE,8);
+
+  // 슬라이드 번호
+  ctx.font=`300 30px 'Noto Sans KR'`;
+  ctx.fillStyle='rgba(255,255,255,0.55)';
+  ctx.fillText(`${String(slide.num).padStart(2,'0')} / ${total}`,80,90);
+
+  // 제목
+  ctx.font=`700 76px 'Noto Serif KR'`;
+  ctx.fillStyle=c.text;
+  const titleLines=wrapText(ctx,slide.title,`700 76px 'Noto Serif KR'`,CARD_SIZE-160);
+  let ty=CARD_SIZE-400;
+  titleLines.forEach(line=>{
+    ctx.fillText(line,80,ty);
+    ty+=96;
+  });
+
+  // 구분선
+  ctx.strokeStyle=c.accent;
+  ctx.lineWidth=3;
+  ctx.globalAlpha=0.6;
+  ctx.beginPath();
+  ctx.moveTo(80,ty+10);
+  ctx.lineTo(200,ty+10);
+  ctx.stroke();
+  ctx.globalAlpha=1;
+  ty+=50;
+
+  // 본문
+  ctx.font=`400 42px 'Noto Sans KR'`;
+  ctx.fillStyle=c.sub;
+  const bodyLines=wrapText(ctx,slide.body,`400 42px 'Noto Sans KR'`,CARD_SIZE-160);
+  bodyLines.slice(0,3).forEach(line=>{
+    if(ty>CARD_SIZE-140) return;
+    ctx.fillText(line,80,ty);
+    ty+=60;
+  });
+
+  // 태그
+  ctx.font=`300 30px 'Noto Sans KR'`;
+  ctx.fillStyle=c.accent;
+  ctx.globalAlpha=0.85;
+  ctx.fillText(slide.tag||'',80,CARD_SIZE-60);
+  ctx.globalAlpha=1;
+
+  // 하단 액센트 라인
+  ctx.fillStyle=c.accent;
+  ctx.fillRect(0,CARD_SIZE-8,CARD_SIZE,8);
+
+  return canvas;
+}
+
+function wrapText(ctx,text,font,maxWidth){
+  ctx.font=font;
+  const lines=[];
+  let cur='';
+  for(let ch of text){
+    const test=cur+ch;
+    if(ctx.measureText(test).width>maxWidth && cur){
+      lines.push(cur); cur=ch;
+    } else { cur=test; }
+  }
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+function renderCards(){
+  canvases=canvases; // already set
+  const grid=document.getElementById('cardsGrid');
+  grid.innerHTML='';
+  slides.forEach((slide,i)=>{
+    const canvas=canvases[i];
+    canvas.style.width='160px';
+    canvas.style.height='160px';
+    canvas.style.borderRadius='8px';
+    canvas.classList.toggle('active', i===selIdx);
+    canvas.classList.add('card-canvas');
+    // 이벤트 중복 방지
+    const newCanvas=canvas.cloneNode(true);
+    newCanvas.addEventListener('click',()=>selectCard(i));
+    // 실제 이미지 데이터 복사
+    const ctx2=newCanvas.getContext('2d');
+    ctx2.drawImage(canvas,0,0);
+    canvases[i]=newCanvas;
+
+    const wrap=document.createElement('div');
+    wrap.className='card-wrap';
+    const dlBtn=document.createElement('button');
+    dlBtn.className='card-dl-btn';
+    dlBtn.textContent=`${slide.num}번 다운로드`;
+    dlBtn.addEventListener('click',()=>downloadCard(i));
+    wrap.appendChild(newCanvas);
+    wrap.appendChild(dlBtn);
+    grid.appendChild(wrap);
+  });
+}
+
+function selectCard(i){
+  selIdx=i;
+  document.querySelectorAll('.card-canvas').forEach((c,idx)=>c.classList.toggle('active',idx===i));
+  renderDetail();
+}
+
+function renderDetail(){
+  const sl=slides[selIdx];
+  document.getElementById('detailText').innerHTML=`
+    <div class="d-num">${sl.num} / ${slides.length}</div>
+    <div class="d-title">${sl.title}</div>
+    <div class="d-body">${sl.body.replace(/\n/g,'<br>')}</div>
+    <div class="d-tag">${sl.tag||''}</div>`;
+}
+
+function downloadCard(i){
+  const a=document.createElement('a');
+  a.download=`카드뉴스_${i+1}.png`;
+  a.href=canvases[i].toDataURL('image/png');
+  a.click();
+}
+function downloadAll(){
+  slides.forEach((_,i)=>setTimeout(()=>downloadCard(i),i*400));
+  showToast('전체 다운로드 시작!');
+}
+function copyAll(){
+  const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.body}\n${s.tag||''}`).join('\n\n');
+  navigator.clipboard.writeText(text).then(()=>showToast('전체 텍스트 복사됐어요!'));
+}
 function showErr(msg){
   const b=document.getElementById('errBar');
   b.textContent=msg; b.style.display='block';
@@ -322,58 +586,13 @@ function showErr(msg){
   document.getElementById('genBtn').disabled=false;
   document.getElementById('genBtn').textContent='생성하기';
 }
-
-function renderPreview(){
-  const s=ACCOUNTS[curAcct].style;
-  document.getElementById('preview').style.display='block';
-  document.getElementById('prevLabel').textContent=`미리보기 — ${ACCOUNTS[curAcct].name} · ${PLAT[curPlat].name}`;
-  document.getElementById('slidesScroll').innerHTML=slides.map((sl,i)=>`
-    <div class="s-thumb ${i===selIdx?'active':''}" style="background:${s.bg}" onclick="selSlide(${i})">
-      <div class="t-num" style="color:${s.sub}">${String(sl.num).padStart(2,'0')} / ${slides.length}</div>
-      <div><div class="t-title" style="color:${s.text}">${sl.title}</div>
-      <div class="t-body" style="color:${s.sub}">${sl.body.replace(/\n/g,' ')}</div></div>
-      <div class="t-tag" style="color:${s.sub}">${sl.tag||''}</div>
-    </div>`).join('');
-  renderDetail();
-}
-
-function renderDetail(){
-  const sl=slides[selIdx];
-  document.getElementById('detail').innerHTML=`
-    <div class="d-num">${sl.num} / ${slides.length}</div>
-    <div class="d-title">${sl.title}</div>
-    <div class="d-body">${sl.body.replace(/\n/g,'<br>')}</div>
-    <div class="d-tag">${sl.tag||''}</div>`;
-}
-
-function selSlide(i){
-  selIdx=i;
-  document.querySelectorAll('.s-thumb').forEach((el,idx)=>el.classList.toggle('active',idx===i));
-  renderDetail();
-}
-
-function copyAll(){
-  const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.body}\n${s.tag||''}`).join('\n\n');
-  navigator.clipboard.writeText(text).then(()=>showToast('전체 복사됐어요!'));
-}
-
-function copySlide(){
-  const s=slides[selIdx];
-  navigator.clipboard.writeText(`${s.title}\n${s.body}\n${s.tag||''}`).then(()=>showToast(`${s.num}번 슬라이드 복사!`));
-}
-
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
+  setTimeout(()=>t.classList.remove('show'),2200);
 }
-
-document.getElementById('apiKey').addEventListener('change',function(){
-  localStorage.setItem('cnews_key',this.value);
-});
-window.addEventListener('load',()=>{
-  const k=localStorage.getItem('cnews_key');
-  if(k) document.getElementById('apiKey').value=k;
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('setupScreen').style.display!=='none') saveKey();
 });
 </script>
 </body>
