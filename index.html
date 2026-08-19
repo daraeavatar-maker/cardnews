@@ -201,6 +201,12 @@
             <input class="f-inp" id="categoryTag" placeholder="예: 의식 트레이닝 아봐타 코스"/>
           </div>
         </div>
+        <div class="form-row" style="margin-top:10px">
+          <div class="fg">
+            <div class="f-lbl">추가 정보 <span style="color:var(--muted);font-size:10px">(선택 — 카페·장소·제품 정보를 붙여넣으면 더 정확해요)</span></div>
+            <textarea class="f-inp" id="extraInfo" rows="3" style="resize:vertical;line-height:1.6;font-size:13px" placeholder="예: 카페 오름은 서울 북촌 한옥마을에 위치한 감성 카페입니다. 대표 메뉴는 오름라떼(6,500원), 흑임자크림롤(7,000원)이며, 루프탑 테라스와 한옥 내부 공간이 특징입니다. 인스타 감성 사진 명소로 주말 웨이팅이 있습니다."></textarea>
+          </div>
+        </div>
         <div class="row-tags" style="margin-top:10px">
           <span class="tag-lbl">플랫폼:</span>
           <button class="tag-btn active" onclick="selPlat(this,'instagram')">인스타그램</button>
@@ -416,10 +422,16 @@ async function generate(){
   try{
     document.getElementById('loadingMsg').textContent='슬라이드 내용 생성 중...';
 
+  const extraInfo = document.getElementById('extraInfo').value.trim();
+
     const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다. 저장과 공유를 극대화하는 카드뉴스를 만들어주세요.
 
 === 계정 정보 ===
-${acctTone}
+${acctTone}${extraInfo ? `
+
+=== 추가 정보 (반드시 이 내용을 기반으로 정확하게 작성할 것) ===
+${extraInfo}
+※ 위 정보에 없는 내용은 절대 만들어내지 말 것. 실제 정보만 사용.` : ''}
 
 === 플랫폼 전략 ===
 ${p.prompt}
