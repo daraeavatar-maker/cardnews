@@ -249,12 +249,8 @@
               <input class="edit-inp" id="editSubtitle" placeholder="부제목"/>
             </div>
             <div class="edit-field">
-              <label class="edit-lbl">본문 <span style="color:var(--muted);font-size:10px">(카드에 표시 — 최대 2줄)</span></label>
-              <textarea class="edit-ta" id="editBody" rows="2" placeholder="카드에 들어갈 본문 2줄"></textarea>
-            </div>
-            <div class="edit-field">
-              <label class="edit-lbl">캡션 <span style="color:var(--muted);font-size:10px">(인스타 게시글 캡션용 — 카드 밖)</span></label>
-              <textarea class="edit-ta" id="editCaption" rows="3" placeholder="인스타그램 게시글에 쓸 캡션 (카드 이미지에는 포함되지 않아요)"></textarea>
+              <label class="edit-lbl">캡션 <span style="color:var(--muted);font-size:10px">(인스타 게시글용 — 카드 이미지에 포함되지 않아요)</span></label>
+              <textarea class="edit-ta" id="editCaption" rows="4" placeholder="인스타그램 게시글에 쓸 캡션을 입력하세요"></textarea>
             </div>
             <div class="edit-field">
               <label class="edit-lbl">해시태그</label>
@@ -458,7 +454,7 @@ ${p.prompt}
 
 === 출력 형식 ===
 순수 JSON만 출력. 마크다운 없이.
-{"slides":[{"num":1,"title":"15자 이내 큰 제목 (강력한 후킹)","subtitle":"20자 이내 중간 제목 (큰 제목 보완)","body":"카드에 표시될 본문 2줄. 50자 이내. 줄바꿈은 \\n","caption":"인스타그램 게시글 캡션. 150자 이내. 저장·공유 유도 포함. 이모지 활용.","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
+{"slides":[{"num":1,"title":"15자 이내 큰 제목 (강력한 후킹)","subtitle":"20자 이내 중간 제목 (큰 제목 보완)","caption":"인스타그램 게시글 캡션. 150자 이내. 저장·공유 유도 포함. 이모지 활용.","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
 
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -529,34 +525,12 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   ctx.shadowBlur=0;
 
   // ── 하단 텍스트 영역 (아래서 위로) ──
-  const bottomPad=80;
+  const bottomPad=100;
   let curY=CH-bottomPad;
-
-  // 2줄 본문 (subtitle을 본문으로 사용)
-  const bodyText=slide.body||'';
-  if(bodyText){
-    const bodyFont=`400 40px 'Pretendard'`;
-    ctx.font=bodyFont;
-    const bodyLines=wrapText(ctx,bodyText,bodyFont,CW-120).slice(0,2);
-    [...bodyLines].reverse().forEach(line=>{
-      ctx.fillStyle=subColor;
-      ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=6;
-      ctx.fillText(line,60,curY);
-      ctx.shadowBlur=0;
-      curY-=56;
-    });
-    curY-=16;
-  }
-
-  // 구분선
-  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.85;
-  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(160,curY); ctx.stroke();
-  ctx.globalAlpha=1;
-  curY-=56;
 
   // 중간 제목 (subtitle)
   if(slide.subtitle){
-    const subtitleFont=`600 52px 'Pretendard'`;
+    const subtitleFont=`500 54px 'Pretendard'`;
     ctx.font=subtitleFont;
     const subtitleLines=wrapText(ctx,slide.subtitle,subtitleFont,CW-120).slice(0,2);
     [...subtitleLines].reverse().forEach(line=>{
@@ -564,13 +538,19 @@ function drawCard(slide,idx,total,bgImg,brand,category){
       ctx.shadowColor='rgba(0,0,0,0.75)'; ctx.shadowBlur=8;
       ctx.fillText(line,60,curY);
       ctx.shadowBlur=0;
-      curY-=68;
+      curY-=72;
     });
-    curY-=10;
+    curY-=20;
   }
 
+  // 구분선
+  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.85;
+  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(160,curY); ctx.stroke();
+  ctx.globalAlpha=1;
+  curY-=64;
+
   // 큰 제목
-  const titleFont=`900 88px 'Pretendard'`;
+  const titleFont=`900 96px 'Pretendard'`;
   ctx.font=titleFont;
   const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120).slice(0,2);
   [...titleLines].reverse().forEach(line=>{
@@ -578,9 +558,9 @@ function drawCard(slide,idx,total,bgImg,brand,category){
     ctx.shadowColor='rgba(0,0,0,0.85)'; ctx.shadowBlur=12;
     ctx.fillText(line,60,curY);
     ctx.shadowBlur=0;
-    curY-=108;
+    curY-=116;
   });
-  curY-=24;
+  curY-=28;
 
   // 카테고리 pill
   const pillText=category||'';
@@ -658,7 +638,6 @@ function renderDetail(){
   document.getElementById('editBadge').textContent=`${sl.num} / ${slides.length}`;
   document.getElementById('editTitle').value=sl.title||'';
   document.getElementById('editSubtitle').value=sl.subtitle||'';
-  document.getElementById('editBody').value=sl.body||'';
   document.getElementById('editCaption').value=sl.caption||'';
   document.getElementById('editTag').value=sl.tag||'';
 }
@@ -667,7 +646,6 @@ function applyEdit(){
   const sl=slides[selIdx];
   sl.title=document.getElementById('editTitle').value;
   sl.subtitle=document.getElementById('editSubtitle').value;
-  sl.body=document.getElementById('editBody').value;
   sl.caption=document.getElementById('editCaption').value;
   sl.tag=document.getElementById('editTag').value;
   // 해당 슬라이드 이미지만 재렌더링
