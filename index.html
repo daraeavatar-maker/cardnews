@@ -340,7 +340,7 @@ function renderThemeGrid(){
     const c = document.createElement('canvas');
     c.width = 1080; c.height = 1350;
     const ctx = c.getContext('2d');
-    const sampleSlide = {title:'카드뉴스', subtitle:'by Darae', tag:'#샘플 #미리보기 #디자인'};
+    const sampleSlide = {title:'카드뉴스', subtitle:'by Darae', tag:'#샘플 #미리보기 #디자인', cta:''};
     const sampleBrand = 'Brand';
     const sampleCat = '카테고리 태그';
     const savedTheme = curTheme;
@@ -817,7 +817,7 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
   ctx.closePath(); ctx.fill(); ctx.globalAlpha=1;
 
   // 박스 안 텍스트
-  let by=boxY+70;
+  let by=boxY+72;
   if(category){
     ctx.font=`500 26px 'Pretendard'`;
     const pW=ctx.measureText(category).width+36; const pH=44;
@@ -825,7 +825,7 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
     roundRect(ctx,60,by,pW,pH,pH/2); ctx.fill();
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
     ctx.fillText(category,78,by+30);
-    by+=pH+28; // pill 높이만큼 명확하게 아래로
+    by+=pH+44; // pill 높이 + 여유
   }
   // 큰 제목
   ctx.font=`900 96px 'Pretendard'`; ctx.fillStyle='#111111';
@@ -886,7 +886,7 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
   ctx.fillText(brand||'',CW-60,68); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // ── 하단 텍스트 영역 ──
-  let ty=imgH+30; // 페이드가 끝나는 지점부터 텍스트
+  let ty=imgH+50;
 
   // 카테고리 pill
   if(category){
@@ -896,10 +896,10 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
     roundRect(ctx,60,ty,pW,pH,pH/2); ctx.fill();
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
     ctx.fillText(category,78,ty+30);
-    ty+=pH+36; // pill 아래 충분한 간격
+    ty+=pH+44; // pill 높이 + 여유 간격
   }
 
-  // 큰 제목 (카테고리와 겹치지 않도록 ty 사용)
+  // 큰 제목
   ctx.font=`900 96px 'Pretendard'`; ctx.fillStyle='#111111';
   const tLines=wrapText(ctx,slide.title||'',`900 96px 'Pretendard'`,CW-120).slice(0,2);
   tLines.forEach(line=>{ctx.fillText(line,60,ty); ty+=112;});
@@ -1089,7 +1089,8 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     ctx.fillStyle='#111'; ctx.globalAlpha=0.85;
     roundRect(ctx,cx-pW/2,ty,pW,pH,pH/2); ctx.fill();
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
-    ctx.fillText(category,cx,ty+30); ty+=pH+36;
+    ctx.fillText(category,cx,ty+30);
+    ty+=pH+48; // pill 후 충분한 간격
   }
 
   // 큰 제목 (중앙)
@@ -1229,13 +1230,13 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   [...tLines].reverse().forEach(line=>{ctx.fillText(line,60,curY); curY-=112;});
   ctx.shadowBlur=0; curY-=20;
 
-  // CTA (카테고리 pill 위)
-  if(slide.cta&&slide.cta.trim()){ drawCTA(ctx,slide,60,curY-160); curY-=110; }
+  // CTA (카테고리 pill 위, 충분한 간격)
+  if(slide.cta&&slide.cta.trim()){ drawCTA(ctx,slide,60,curY-170); curY-=120; }
   // 카테고리 pill
   if(category){
     ctx.font=`500 28px 'Pretendard'`;
     const pW=ctx.measureText(category).width+44; const pH=50;
-    const pX=60; const pY=curY-pH;
+    const pX=60; const pY=curY-pH-10;
     ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.globalAlpha=0.92;
     roundRect(ctx,pX,pY,pW,pH,pH/2); ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5; ctx.globalAlpha=1;
