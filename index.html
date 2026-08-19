@@ -684,8 +684,42 @@ function applyEdit(){
   showToast('수정 완료! 이미지가 업데이트됐어요.');
 }
 
-function downloadCard(i){const a=document.createElement('a');a.download=`카드뉴스_${i+1}.png`;a.href=canvases[i].toDataURL('image/png');a.click();}
-function downloadAll(){slides.forEach((_,i)=>setTimeout(()=>downloadCard(i),i*400));showToast('전체 다운로드 시작!');}
+function downloadCard(i){
+  const dataUrl=canvases[i].toDataURL('image/png');
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    // 모바일: 새 탭에서 이미지 열기 → 길게 눌러서 저장
+    const win=window.open('','_blank');
+    if(win){
+      win.document.write(`
+        <html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>카드뉴스 ${i+1}번</title>
+        <style>body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;}
+        img{max-width:100%;border-radius:8px;}
+        p{color:#fff;font-family:sans-serif;font-size:14px;text-align:center;opacity:0.7;padding:0 20px;}</style>
+        </head><body>
+        <p>이미지를 <strong>길게 눌러</strong> 저장하세요</p>
+        <img src="${dataUrl}" />
+        </body></html>`);
+      win.document.close();
+    }
+  } else {
+    // PC: 기존 다운로드 방식
+    const a=document.createElement('a');
+    a.download=`카드뉴스_${i+1}.png`;
+    a.href=dataUrl;
+    a.click();
+  }
+}
+function downloadAll(){
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    showToast('각 카드 아래 저장 버튼을 눌러주세요!');
+  } else {
+    slides.forEach((_,i)=>setTimeout(()=>downloadCard(i),i*400));
+    showToast('전체 다운로드 시작!');
+  }
+}
 function copyAll(){const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.body}\n${s.tag||''}`).join('\n\n');navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));}
 function showErr(msg){const b=document.getElementById('errBar');b.textContent=msg;b.style.display='block';document.getElementById('loading').style.display='none';document.getElementById('genBtn').disabled=false;document.getElementById('genBtn').textContent='생성하기';}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
