@@ -134,6 +134,7 @@
         <button class="acct-btn" onclick="selAcct('koreansl')" id="btn-koreansl"><span class="acct-icon">🤟</span><div><div class="acct-name">한국수어</div><div class="acct-desc">수어 교육</div></div></button>
         <button class="acct-btn" onclick="selAcct('digital')" id="btn-digital"><span class="acct-icon">💻</span><div><div class="acct-name">디지털교육</div><div class="acct-desc">디지털 리터러시</div></div></button>
         <button class="acct-btn" onclick="selAcct('selfdev')" id="btn-selfdev"><span class="acct-icon">✨</span><div><div class="acct-name">자기계발</div><div class="acct-desc">좋은글·동기부여</div></div></button>
+        <button class="acct-btn" onclick="selAcct('custom')" id="btn-custom"><span class="acct-icon">⚙️</span><div><div class="acct-name">직접 입력</div><div class="acct-desc">내 계정 맞춤설정</div></div></button>
       </div>
       <div class="sidebar-bottom"><button class="reset-btn" onclick="resetKey()">🔑 키 변경 / 초기화</button></div>
     </aside>
@@ -141,6 +142,37 @@
     <main class="main">
       <div class="page-title">카드뉴스 생성기 by Darae</div>
       <div class="page-sub">인스타그램 4:5 카드뉴스를 자동으로 만들어드려요.</div>
+
+      <!-- 커스텀 계정 패널 -->
+      <div class="form-card" id="customPanel" style="display:none">
+        <div class="f-lbl" style="margin-bottom:10px">내 계정 정보</div>
+        <div class="form-row">
+          <div class="fg">
+            <div class="f-lbl">계정 이름</div>
+            <input class="f-inp" id="customName" placeholder="예: 요가스튜디오 / 카페 블루 / 부동산 상담"/>
+          </div>
+          <div class="fg">
+            <div class="f-lbl">업종 / 주제</div>
+            <input class="f-inp" id="customIndustry" placeholder="예: 요가, 명상, 웰니스 / 카페, 디저트, 커피"/>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:10px">
+          <div class="fg">
+            <div class="f-lbl">타겟 고객</div>
+            <input class="f-inp" id="customTarget" placeholder="예: 20-30대 직장여성 / 동네 주민 / 건강 관심자"/>
+          </div>
+          <div class="fg">
+            <div class="f-lbl">콘텐츠 톤</div>
+            <select class="f-sel" id="customTone" style="max-width:100%">
+              <option value="friendly">친근하고 따뜻하게</option>
+              <option value="professional">전문적이고 신뢰있게</option>
+              <option value="trendy">트렌디하고 감각있게</option>
+              <option value="emotional">감성적이고 무드있게</option>
+              <option value="informative">정보중심 실용적으로</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
       <!-- 주제 + 브랜드 + 카테고리 -->
       <div class="form-card">
@@ -242,7 +274,16 @@ const THEMES=[
   {id:'charcoal',   name:'차콜',    pill:'#aaaaaa', pillText:'#fff', overlay:'rgba(5,5,5,0.70)',    grad:['#1a1a1a','#0a0a0a'], accent:'#cccccc'},
 ];
 
+const CUSTOM_TONES={
+  friendly:'친근하고 따뜻한 어조. 이웃에게 말하듯 편안하게. 공감과 친밀감 중심.',
+  professional:'전문적이고 신뢰있는 어조. 정확한 정보와 전문성 강조. 신뢰 구축 중심.',
+  trendy:'트렌디하고 감각있는 어조. MZ세대 언어감각. 짧고 임팩트있게.',
+  emotional:'감성적이고 무드있는 어조. 감정을 자극하고 공감을 이끌어내는 방식.',
+  informative:'정보중심 실용적 어조. 구체적 수치와 팁 중심. 바로 써먹을 수 있게.'
+};
+
 const ACCOUNTS={
+  custom:{name:'직접입력',slides:5,brand:'',category:'',unsplash:'lifestyle business',tone:''},
   avatarcourse:{name:'아봐타코스',slides:5,brand:'아봐타다래센터',category:'의식 트레이닝 아봐타 코스',unsplash:'nature person contemplation peaceful',
     tone:'계정: 아봐타(Avatar) 의식계발 교육 전문.\n어조: 철학적이고 깊은 통찰. 독자의 내면에 질문을 던지는 방식.\n핵심: 신념 탐구, 의식 확장, 삶의 창조와 연결된 메시지.'},
   koreansl:{name:'한국수어',slides:4,brand:'한국수어연구소',category:'한국수어 교육',unsplash:'hands communication people sign language',
@@ -283,9 +324,16 @@ function selAcct(id){
   document.querySelectorAll('.acct-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-'+id).classList.add('active');
   document.getElementById('slideCount').value=ACCOUNTS[id].slides;
-  const a=ACCOUNTS[id];
-  if(!document.getElementById('brandName').value) document.getElementById('brandName').value=a.brand;
-  if(!document.getElementById('categoryTag').value) document.getElementById('categoryTag').value=a.category;
+  // 커스텀 패널 토글
+  document.getElementById('customPanel').style.display=(id==='custom'?'block':'none');
+  if(id!=='custom'){
+    const a=ACCOUNTS[id];
+    document.getElementById('brandName').value=a.brand;
+    document.getElementById('categoryTag').value=a.category;
+  } else {
+    document.getElementById('brandName').value='';
+    document.getElementById('categoryTag').value='';
+  }
 }
 
 function selPlat(el,id){
@@ -351,13 +399,27 @@ async function generate(){
   const brand=document.getElementById('brandName').value.trim()||a.brand;
   const category=document.getElementById('categoryTag').value.trim()||a.category;
 
+  // 커스텀 계정 톤 동적 생성
+  let acctTone = a.tone;
+  if(curAcct==='custom'){
+    const cName=document.getElementById('customName').value.trim()||'내 계정';
+    const cIndustry=document.getElementById('customIndustry').value.trim()||'일반';
+    const cTarget=document.getElementById('customTarget').value.trim()||'일반 대중';
+    const cToneKey=document.getElementById('customTone').value;
+    acctTone=`계정: ${cName} (${cIndustry} 관련 인스타그램 계정).
+타겟: ${cTarget}.
+어조: ${CUSTOM_TONES[cToneKey]}
+핵심: ${cIndustry}와 관련된 유용하고 흥미로운 콘텐츠로 팔로워 신뢰 구축.`;
+    ACCOUNTS.custom.unsplash=cIndustry.split(',')[0].trim()+' lifestyle';
+  }
+
   try{
     document.getElementById('loadingMsg').textContent='슬라이드 내용 생성 중...';
 
     const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다. 저장과 공유를 극대화하는 카드뉴스를 만들어주세요.
 
 === 계정 정보 ===
-${a.tone}
+${acctTone}
 
 === 플랫폼 전략 ===
 ${p.prompt}
