@@ -9,7 +9,6 @@
   :root{--bg:#0d0d0f;--surface:#17171a;--surface2:#1f1f24;--border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.16);--text:#f0eff4;--sub:#8b8a96;--muted:#4a4955;--accent:#7c5cbf;--accent-l:rgba(124,92,191,0.15);--accent-b:rgba(124,92,191,0.4);--danger:#e05a5a;--success:#4caf82;--r:12px;--rs:8px;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;min-height:100vh;}
-  /* 설정 화면 */
   .setup-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
   .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:420px;}
   .setup-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
@@ -25,11 +24,10 @@
   .setup-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
   .setup-hint{font-size:11px;color:var(--muted);margin-top:12px;text-align:center;}
   .setup-hint a{color:var(--accent);text-decoration:none;}
-  /* 앱 */
   .app-screen{display:none;}
   .layout{display:flex;min-height:100vh;}
   .sidebar{width:210px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;}
-  .main{flex:1;padding:28px 32px;}
+  .main{flex:1;padding:24px 28px;max-width:960px;}
   .logo{display:flex;align-items:center;gap:10px;}
   .logo-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;}
   .logo-text{font-size:14px;font-weight:700;}
@@ -47,32 +45,32 @@
   .reset-btn{padding:6px 8px;border:1px solid var(--border);border-radius:var(--rs);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:left;}
   .reset-btn:hover{color:var(--danger);border-color:rgba(224,90,90,.3);}
   .page-title{font-size:20px;font-weight:700;letter-spacing:-.03em;margin-bottom:3px;}
-  .page-sub{font-size:13px;color:var(--sub);margin-bottom:20px;}
-  .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
-  .form-row{display:flex;gap:10px;align-items:flex-end;}
-  .fg{display:flex;flex-direction:column;gap:5px;flex:1;}
+  .page-sub{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+  .form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+  .fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px;}
   .f-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
   .f-inp,.f-sel{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
   .f-inp:focus,.f-sel:focus{border-color:var(--accent-b);}
   .f-inp::placeholder{color:var(--muted);}
-  .f-sel{cursor:pointer;max-width:90px;}
+  .f-sel{cursor:pointer;}
   .f-sel option{background:var(--surface2);}
   .row-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center;}
   .tag-lbl{font-size:11px;color:var(--muted);}
   .tag-btn{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
   .tag-btn:hover{border-color:var(--border-h);color:var(--text);}
   .tag-btn.active{border-color:var(--accent-b);background:var(--accent-l);color:var(--text);}
-  /* 테마 선택 */
-  .theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
-  .theme-btn{border-radius:8px;height:48px;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative;overflow:hidden;}
+  /* 테마 */
+  .theme-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+  .theme-scroll::-webkit-scrollbar{display:none;}
+  .theme-btn{flex-shrink:0;width:80px;height:56px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;}
   .theme-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent);}
-  .theme-btn span{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.8);}
-  .gen-btn{padding:9px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .theme-btn span{font-size:10px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.9);font-weight:500;position:relative;z-index:1;}
+  .gen-btn{padding:9px 22px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;align-self:flex-end;}
   .gen-btn:hover{opacity:.88;}
   .gen-btn:disabled{opacity:.4;cursor:not-allowed;}
   .err-bar{background:rgba(224,90,90,.1);border:1px solid rgba(224,90,90,.3);border-radius:var(--rs);padding:9px 12px;color:var(--danger);font-size:13px;margin-bottom:14px;display:none;}
-  .loading{display:none;flex-direction:column;gap:6px;padding:20px 0;}
-  .loading-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub);}
+  .loading{display:none;align-items:center;gap:10px;padding:20px 0;color:var(--sub);font-size:13px;}
   .spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .7s linear infinite;flex-shrink:0;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .preview{display:none;}
@@ -80,14 +78,14 @@
   .sec-title{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
   .dl-all-btn{padding:6px 14px;border:1px solid var(--accent-b);border-radius:var(--rs);background:var(--accent-l);color:var(--text);font-family:inherit;font-size:12px;cursor:pointer;}
   .dl-all-btn:hover{background:var(--accent);color:#fff;}
-  .cards-grid{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .cards-grid{display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
   .card-wrap{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:center;}
-  .card-canvas{border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;display:block;}
+  .card-canvas{border-radius:6px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;display:block;}
   .card-canvas:hover{border-color:var(--accent-b);}
   .card-canvas.active{border-color:var(--accent);}
-  .card-dl-btn{padding:5px 12px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:center;}
+  .card-dl-btn{padding:5px 10px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:center;}
   .card-dl-btn:hover{background:var(--surface2);color:var(--text);}
-  .detail-text{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-top:16px;}
+  .detail-text{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-top:14px;}
   .d-num{font-size:11px;color:var(--muted);margin-bottom:6px;}
   .d-title{font-size:17px;font-weight:700;line-height:1.5;margin-bottom:8px;}
   .d-body{font-size:14px;color:var(--sub);line-height:1.8;margin-bottom:10px;white-space:pre-wrap;}
@@ -97,7 +95,7 @@
   .act-btn:hover{background:var(--surface2);color:var(--text);}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
-  @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}.theme-grid{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
 </style>
 </head>
 <body>
@@ -130,17 +128,34 @@
 
     <main class="main">
       <div class="page-title">카드뉴스 생성기</div>
-      <div class="page-sub">주제·플랫폼·디자인을 선택하면 인스타그램 4:5 카드뉴스를 만들어드려요.</div>
+      <div class="page-sub">인스타그램 4:5 카드뉴스를 자동으로 만들어드려요.</div>
 
+      <!-- 주제 + 브랜드 + 카테고리 -->
       <div class="form-card">
         <div class="form-row">
-          <div class="fg"><div class="f-lbl">주제</div><input class="f-inp" id="topicInput" placeholder="예: 9월 아봐타코스를 참석해야 하는 이유"/></div>
-          <div class="fg" style="max-width:88px"><div class="f-lbl">슬라이드</div>
-            <select class="f-sel" id="slideCount"><option value="3">3장</option><option value="4">4장</option><option value="5" selected>5장</option><option value="6">6장</option><option value="7">7장</option></select>
+          <div class="fg" style="flex:3">
+            <div class="f-lbl">주제</div>
+            <input class="f-inp" id="topicInput" placeholder="예: 아봐타코스를 참석해야 하는 이유"/>
+          </div>
+          <div class="fg" style="max-width:80px">
+            <div class="f-lbl">슬라이드</div>
+            <select class="f-sel" id="slideCount">
+              <option value="3">3장</option><option value="4">4장</option><option value="5" selected>5장</option><option value="6">6장</option><option value="7">7장</option>
+            </select>
           </div>
           <button class="gen-btn" id="genBtn" onclick="generate()">생성하기</button>
         </div>
-        <div class="row-tags">
+        <div class="form-row" style="margin-top:10px">
+          <div class="fg">
+            <div class="f-lbl">브랜드명 (우상단)</div>
+            <input class="f-inp" id="brandName" placeholder="예: 아봐타다래센터"/>
+          </div>
+          <div class="fg">
+            <div class="f-lbl">카테고리 태그 (하단 pill)</div>
+            <input class="f-inp" id="categoryTag" placeholder="예: 의식 트레이닝 아봐타 코스"/>
+          </div>
+        </div>
+        <div class="row-tags" style="margin-top:10px">
           <span class="tag-lbl">플랫폼:</span>
           <button class="tag-btn active" onclick="selPlat(this,'instagram')">인스타그램</button>
           <button class="tag-btn" onclick="selPlat(this,'naver_blog')">네이버 블로그</button>
@@ -149,15 +164,14 @@
         </div>
       </div>
 
+      <!-- 디자인 테마 -->
       <div class="form-card">
         <div class="f-lbl" style="margin-bottom:10px">디자인 테마</div>
-        <div class="theme-grid" id="themeGrid"></div>
+        <div class="theme-scroll" id="themeGrid"></div>
       </div>
 
       <div class="err-bar" id="errBar"></div>
-      <div class="loading" id="loading">
-        <div class="loading-row"><div class="spinner"></div><span id="loadingMsg">콘텐츠 생성 중...</span></div>
-      </div>
+      <div class="loading" id="loading"><div class="spinner"></div><span id="loadingMsg">생성 중...</span></div>
 
       <div class="preview" id="preview">
         <div class="sec-hd">
@@ -177,46 +191,47 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CW = 1080, CH = 1350; // 4:5 인스타그램
-const UNSPLASH_KEY = 'YOUR_ACCESS_KEY_HERE';
+const CW=1080, CH=1350;
+const UNSPLASH_KEY='YOUR_ACCESS_KEY_HERE';
 
-// 디자인 테마
-const THEMES = [
-  { id:'dark_purple', name:'딥퍼플', overlay:'rgba(10,5,30,0.70)', accent:'#9b7de8', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(155,125,232,0.9)', gradient:['#1a0a3e','#0a0515'] },
-  { id:'dark_blue',   name:'네이비', overlay:'rgba(0,10,40,0.72)',  accent:'#4ab0f0', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(74,176,240,0.9)',  gradient:['#050f2e','#010820'] },
-  { id:'warm_dark',   name:'웜브라운',overlay:'rgba(20,10,0,0.68)', accent:'#f0a030', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(240,160,48,0.9)',  gradient:['#2a1500','#150a00'] },
-  { id:'minimal',     name:'미니멀', overlay:'rgba(240,240,248,0.78)',accent:'#5a3ea0',text:'#1a1428',sub:'rgba(30,20,50,0.80)', tag:'rgba(90,62,160,0.9)',   gradient:['#f0eff8','#e0ddf0'] },
-  { id:'forest',      name:'포레스트',overlay:'rgba(0,20,10,0.68)', accent:'#4caf82', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(76,175,130,0.9)',  gradient:['#051a0c','#020e06'] },
-  { id:'rose',        name:'로즈',   overlay:'rgba(30,0,15,0.65)',  accent:'#f06090', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(240,96,144,0.9)',  gradient:['#2a0515','#150208'] },
-  { id:'cyan',        name:'사이언', overlay:'rgba(0,15,25,0.70)',  accent:'#00d4e8', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(0,212,232,0.9)',   gradient:['#00111e','#000810'] },
-  { id:'gold',        name:'골드',   overlay:'rgba(15,10,0,0.68)',  accent:'#d4a020', text:'#fff', sub:'rgba(255,255,255,0.82)', tag:'rgba(212,160,32,0.9)',  gradient:['#1e1400','#0f0a00'] },
+const THEMES=[
+  {id:'mint_dark',  name:'민트',    pill:'#3ec9a0', pillText:'#fff', overlay:'rgba(0,15,10,0.62)',  grad:['#051a10','#010c08'], accent:'#3ec9a0'},
+  {id:'sky_dark',   name:'스카이',  pill:'#4ab0f0', pillText:'#fff', overlay:'rgba(0,10,30,0.65)',  grad:['#050f28','#010818'], accent:'#4ab0f0'},
+  {id:'purple_dark',name:'퍼플',    pill:'#9b7de8', pillText:'#fff', overlay:'rgba(10,5,30,0.65)',  grad:['#150a3a','#080318'], accent:'#9b7de8'},
+  {id:'rose_dark',  name:'로즈',    pill:'#f06090', pillText:'#fff', overlay:'rgba(25,0,10,0.65)',  grad:['#280510','#120208'], accent:'#f06090'},
+  {id:'gold_dark',  name:'골드',    pill:'#f0b030', pillText:'#fff', overlay:'rgba(15,8,0,0.65)',   grad:['#1e1000','#0f0800'], accent:'#f0b030'},
+  {id:'forest',     name:'포레스트',pill:'#4caf82', pillText:'#fff', overlay:'rgba(0,18,8,0.65)',   grad:['#041410','#020a06'], accent:'#4caf82'},
+  {id:'minimal',    name:'미니멀',  pill:'#5a3ea0', pillText:'#fff', overlay:'rgba(230,228,245,0.72)',grad:['#f0eff8','#e0ddf0'],accent:'#5a3ea0'},
+  {id:'charcoal',   name:'차콜',    pill:'#aaaaaa', pillText:'#fff', overlay:'rgba(5,5,5,0.70)',    grad:['#1a1a1a','#0a0a0a'], accent:'#cccccc'},
 ];
 
-const ACCOUNTS = {
-  avatarcourse:{name:'아봐타코스',slides:5,unsplash:'meditation consciousness mind spiritual',tone:`계정: 아봐타(Avatar) 의식계발 교육 전문.\n어조: 철학적이고 깊은 통찰. 독자의 내면에 질문을 던지는 방식. 묵직하고 진중하게.\n핵심: 신념 탐구, 의식 확장, 삶의 창조와 연결된 메시지.`},
-  koreansl:{name:'한국수어',slides:4,unsplash:'sign language hands communication people',tone:`계정: 한국수어 교육 및 접근성 증진.\n어조: 친근하고 따뜻하며 명확한 교육적 어조.\n핵심: 누구나 배울 수 있다는 접근성, 소통의 가치.`},
-  digital:{name:'디지털교육',slides:5,unsplash:'technology digital future innovation',tone:`계정: 디지털 리터러시 및 IT 교육.\n어조: 세련되고 실용적. 복잡한 개념을 쉽게 풀어주는 방식.\n핵심: 당장 써먹을 수 있는 정보, 미래 준비.`},
-  selfdev:{name:'자기계발',slides:6,unsplash:'motivation success growth nature sunrise',tone:`계정: 자기계발·동기부여·좋은글 수익화.\n어조: 따뜻하고 공감을 이끌어내는 어조. 읽는 순간 저장하고 싶은 문장.\n핵심: 삶의 지혜, 변화 동기, 실천 가능한 조언.`}
+const ACCOUNTS={
+  avatarcourse:{name:'아봐타코스',slides:5,brand:'아봐타다래센터',category:'의식 트레이닝 아봐타 코스',unsplash:'nature person contemplation peaceful',
+    tone:'계정: 아봐타(Avatar) 의식계발 교육 전문.\n어조: 철학적이고 깊은 통찰. 독자의 내면에 질문을 던지는 방식.\n핵심: 신념 탐구, 의식 확장, 삶의 창조와 연결된 메시지.'},
+  koreansl:{name:'한국수어',slides:4,brand:'한국수어연구소',category:'한국수어 교육',unsplash:'hands communication people sign language',
+    tone:'계정: 한국수어 교육 및 접근성 증진.\n어조: 친근하고 따뜻하며 명확한 교육적 어조.\n핵심: 누구나 배울 수 있다는 접근성, 소통의 가치.'},
+  digital:{name:'디지털교육',slides:5,brand:'디지털교육센터',category:'디지털 리터러시',unsplash:'technology laptop digital future',
+    tone:'계정: 디지털 리터러시 및 IT 교육.\n어조: 세련되고 실용적.\n핵심: 당장 써먹을 수 있는 정보, 미래 준비.'},
+  selfdev:{name:'자기계발',slides:6,brand:'셀프리더십연구소',category:'자기계발 인사이트',unsplash:'sunrise motivation success growth',
+    tone:'계정: 자기계발·동기부여·좋은글 수익화.\n어조: 따뜻하고 공감을 이끌어내는 어조.\n핵심: 삶의 지혜, 변화 동기, 실천 가능한 조언.'}
 };
 
-const PLAT = {
-  instagram:{name:'인스타그램',prompt:`플랫폼: 인스타그램\n알고리즘 핵심: 저장률과 공유율이 도달률을 결정.\n전략:\n- 1번: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹\n- 중간: 실제로 유용하거나 깊은 통찰 — 저장 이유를 만들어라\n- 마지막: "저장해두세요" 또는 "공유하면 도움이 될 사람이 있나요?" 직접 유도\n해시태그: 대중 태그 1개 + 중간 태그 1개 + 계정 특화 태그 1개`},
-  naver_blog:{name:'네이버 블로그',prompt:`플랫폼: 네이버 블로그\n알고리즘 핵심: 검색 키워드 노출 + 체류시간.\n전략:\n- 1번: 검색할 법한 키워드가 자연스럽게 포함된 제목\n- 중간: 정보성 강조, 구체적 수치나 예시 포함\n- 마지막: 댓글·구독 유도, 다음 콘텐츠 예고`},
-  clip:{name:'클립',prompt:`플랫폼: 네이버 클립\n알고리즘 핵심: 첫 1초 이탈률, 완주율.\n전략:\n- 1번: 0.5초 안에 멈추게 하는 강렬한 한 문장 후킹\n- 중간: 빠른 템포, 짧고 강한 문장\n- 마지막: 강한 반전 or 핵심 한 줄 요약`},
-  threads:{name:'스레드',prompt:`플랫폼: 스레드(Threads)\n알고리즘 핵심: 댓글과 공유 — 대화를 유발하라.\n전략:\n- 1번: 논쟁적이거나 공감되는 질문으로 시작\n- 중간: 대화체, 친구에게 말하듯 자연스럽게\n- 마지막: 의견을 묻거나 공유를 유도하는 열린 마무리`}
+const PLAT={
+  instagram:{name:'인스타그램',prompt:'플랫폼: 인스타그램\n알고리즘 핵심: 저장률과 공유율이 도달률을 결정.\n전략:\n- 1번: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹\n- 중간: 실제로 유용하거나 깊은 통찰\n- 마지막: 저장·공유 직접 유도\n해시태그: 대중 1개 + 중간 1개 + 계정특화 1개'},
+  naver_blog:{name:'네이버 블로그',prompt:'플랫폼: 네이버 블로그\n알고리즘 핵심: 검색 키워드 노출 + 체류시간.\n전략:\n- 1번: 검색 키워드 자연스럽게 포함\n- 중간: 정보성 강조, 수치/예시 포함\n- 마지막: 댓글·구독 유도'},
+  clip:{name:'클립',prompt:'플랫폼: 네이버 클립\n알고리즘 핵심: 첫 1초 이탈률.\n전략:\n- 1번: 0.5초 안에 멈추게 하는 강렬한 후킹\n- 중간: 빠른 템포\n- 마지막: 강한 반전 or 핵심 요약'},
+  threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', curTheme='dark_purple';
-let slides=[], selIdx=0, canvases=[];
+let curAcct='avatarcourse', curPlat='instagram', curTheme='mint_dark';
+let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
-// 테마 그리드 렌더링
 function renderThemeGrid(){
-  const grid = document.getElementById('themeGrid');
-  grid.innerHTML = THEMES.map(t=>`
-    <button class="theme-btn ${t.id===curTheme?'active':''}" 
-      style="background:linear-gradient(135deg,${t.gradient[0]},${t.gradient[1]})"
+  document.getElementById('themeGrid').innerHTML=THEMES.map(t=>`
+    <button class="theme-btn ${t.id===curTheme?'active':''}"
+      style="background:linear-gradient(135deg,${t.grad[0]},${t.grad[1]});border-color:${t.id===curTheme?'#fff':'transparent'}"
       onclick="selTheme('${t.id}')">
-      <span>${t.name}</span>
+      <span style="background:${t.pill};padding:2px 8px;border-radius:10px;font-size:10px">${t.name}</span>
     </button>`).join('');
 }
 
@@ -226,12 +241,27 @@ function selTheme(id){
   if(slides.length){canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i]));renderCards();}
 }
 
-let bgImgs=[];
+function selAcct(id){
+  curAcct=id;
+  document.querySelectorAll('.acct-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-'+id).classList.add('active');
+  document.getElementById('slideCount').value=ACCOUNTS[id].slides;
+  const a=ACCOUNTS[id];
+  if(!document.getElementById('brandName').value) document.getElementById('brandName').value=a.brand;
+  if(!document.getElementById('categoryTag').value) document.getElementById('categoryTag').value=a.category;
+}
+
+function selPlat(el,id){
+  curPlat=id;
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
 
 window.addEventListener('load',()=>{
   const k=localStorage.getItem('cnews_key');
   if(k) showApp(); else showSetup();
   renderThemeGrid();
+  selAcct('avatarcourse');
 });
 
 function showSetup(){document.getElementById('setupScreen').style.display='flex';document.getElementById('appScreen').style.display='none';}
@@ -242,16 +272,13 @@ function saveKey(){
   if(!k||!k.startsWith('sk-ant-')){err.textContent='올바른 API 키를 입력해주세요.';err.style.display='block';return;}
   localStorage.setItem('cnews_key',k);showApp();showToast('API 키가 저장됐어요!');
 }
-function resetKey(){if(confirm('API 키를 초기화할까요?')){localStorage.removeItem('cnews_key');document.getElementById('setupKey').value='';document.getElementById('setupErr').style.display='none';showSetup();}}
-function selAcct(id){curAcct=id;document.querySelectorAll('.acct-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-'+id).classList.add('active');document.getElementById('slideCount').value=ACCOUNTS[id].slides;}
-function selPlat(el,id){curPlat=id;document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function resetKey(){if(confirm('API 키를 초기화할까요?')){localStorage.removeItem('cnews_key');showSetup();}}
 
 async function fetchImg(query){
   try{
     const res=await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=portrait`,{headers:{Authorization:`Client-ID ${UNSPLASH_KEY}`}});
     if(!res.ok) throw new Error();
-    const d=await res.json();
-    return d.urls.regular;
+    const d=await res.json(); return d.urls.regular;
   }catch{
     let h=0; for(let c of query){h=((h<<5)-h)+c.charCodeAt(0);h|=0;}
     return `https://picsum.photos/seed/${Math.abs(h)%1000}/1080/1350`;
@@ -265,7 +292,7 @@ function loadImg(url){
     img.onerror=()=>{
       const fb=new Image(); fb.crossOrigin='anonymous';
       fb.onload=()=>res(fb); fb.onerror=()=>res(null);
-      fb.src=`https://picsum.photos/seed/${Math.random()*1000|0}/1080/1350`;
+      fb.src=`https://picsum.photos/seed/${Math.random()*999|0}/1080/1350`;
     };
     img.src=url;
   });
@@ -277,16 +304,48 @@ async function generate(){
   const count=parseInt(document.getElementById('slideCount').value);
   document.getElementById('errBar').style.display='none';
   if(!topic){showErr('주제를 입력해주세요.');return;}
+
   const btn=document.getElementById('genBtn');
   btn.disabled=true; btn.textContent='생성 중...';
   document.getElementById('loading').style.display='flex';
   document.getElementById('preview').style.display='none';
 
   const a=ACCOUNTS[curAcct], p=PLAT[curPlat];
+  const brand=document.getElementById('brandName').value.trim()||a.brand;
+  const category=document.getElementById('categoryTag').value.trim()||a.category;
+
   try{
     document.getElementById('loadingMsg').textContent='슬라이드 내용 생성 중...';
-    const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다.\n\n=== 계정 정보 ===\n${a.tone}\n\n=== 플랫폼 전략 ===\n${p.prompt}\n\n=== 요청 ===\n주제: ${topic}\n슬라이드 수: ${count}장\n\n=== 출력 형식 ===\n반드시 순수 JSON만 출력. 마크다운 없이.\n{"slides":[{"num":1,"title":"15자 이내","body":"60자 이내. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+
+    const prompt=`당신은 인스타그램 바이럴 콘텐츠 전문가입니다. 저장과 공유를 극대화하는 카드뉴스를 만들어주세요.
+
+=== 계정 정보 ===
+${a.tone}
+
+=== 플랫폼 전략 ===
+${p.prompt}
+
+=== 요청 ===
+주제: ${topic}
+슬라이드 수: ${count}장
+브랜드: ${brand}
+카테고리: ${category}
+
+=== 콘텐츠 퀄리티 기준 ===
+- 제목: 읽는 순간 멈추게 만드는 강력한 한 줄. 질문형, 숫자형, 반전형 활용
+- 본문: 구체적이고 실질적인 내용. 추상적 표현 금지. 독자가 바로 써먹을 수 있는 정보
+- 감정: 공감 → 인사이트 → 행동 유도 흐름으로 구성
+- 마지막 슬라이드: 반드시 저장/공유/댓글 유도 문구 포함
+
+=== 출력 형식 ===
+순수 JSON만 출력. 마크다운 없이.
+{"slides":[{"num":1,"title":"15자 이내 강력한 제목","body":"실질적이고 구체적인 본문 70자 이내. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어 (주제와 감성에 맞게)"}]}`;
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+    });
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`오류 ${res.status}`);}
     const data=await res.json();
     const raw=data.content.filter(i=>i.type==='text').map(i=>i.text).join('').trim();
@@ -298,18 +357,23 @@ async function generate(){
     bgImgs=await Promise.all(urls.map(u=>loadImg(u)));
 
     document.getElementById('loadingMsg').textContent='카드 이미지 렌더링 중...';
-    canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i]));
+    canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
     selIdx=0;
     renderCards(); renderDetail();
     document.getElementById('preview').style.display='block';
     document.getElementById('prevLabel').textContent=`카드 이미지 — ${a.name} · ${PLAT[curPlat].name}`;
   }catch(e){showErr('생성 실패: '+e.message);}
+
   btn.disabled=false; btn.textContent='생성하기';
   document.getElementById('loading').style.display='none';
 }
 
-function drawCard(slide, idx, total, bgImg){
+function drawCard(slide,idx,total,bgImg,brand,category){
   const t=THEMES.find(x=>x.id===curTheme)||THEMES[0];
+  const isLight=curTheme==='minimal';
+  const textColor=isLight?'#1a1428':'#ffffff';
+  const subColor=isLight?'rgba(30,20,50,0.85)':'rgba(255,255,255,0.88)';
+
   const canvas=document.createElement('canvas');
   canvas.width=CW; canvas.height=CH;
   const ctx=canvas.getContext('2d');
@@ -317,73 +381,117 @@ function drawCard(slide, idx, total, bgImg){
   // 배경 이미지
   if(bgImg){
     const scale=Math.max(CW/bgImg.width,CH/bgImg.height);
-    const sw=bgImg.width*scale,sh=bgImg.height*scale;
+    const sw=bgImg.width*scale, sh=bgImg.height*scale;
     ctx.drawImage(bgImg,(CW-sw)/2,(CH-sh)/2,sw,sh);
   } else {
     const bg=ctx.createLinearGradient(0,0,CW,CH);
-    bg.addColorStop(0,t.gradient[0]); bg.addColorStop(1,t.gradient[1]);
+    bg.addColorStop(0,t.grad[0]); bg.addColorStop(1,t.grad[1]);
     ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
   }
 
-  // 오버레이
+  // 전체 오버레이
   ctx.fillStyle=t.overlay; ctx.fillRect(0,0,CW,CH);
 
-  // 하단 그라디언트 강화 (텍스트 영역)
-  const grad=ctx.createLinearGradient(0,CH*0.45,0,CH);
+  // 하단 강한 그라디언트 (텍스트 영역 가독성)
+  const grad=ctx.createLinearGradient(0,CH*0.38,0,CH);
   grad.addColorStop(0,'rgba(0,0,0,0)');
-  grad.addColorStop(0.5,'rgba(0,0,0,0.55)');
-  grad.addColorStop(1,'rgba(0,0,0,0.88)');
+  grad.addColorStop(0.4,'rgba(0,0,0,0.45)');
+  grad.addColorStop(1,'rgba(0,0,0,0.90)');
   ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
 
-  // 상단 액센트 바
-  ctx.fillStyle=t.accent; ctx.fillRect(0,0,CW,10);
-
-  // 슬라이드 번호 (우상단)
-  ctx.font=`300 32px 'Noto Sans KR'`;
-  ctx.fillStyle='rgba(255,255,255,0.5)';
+  // ── 우상단 브랜드명 ──
+  ctx.font=`500 32px 'Noto Sans KR'`;
+  ctx.fillStyle='rgba(255,255,255,0.90)';
   ctx.textAlign='right';
-  ctx.fillText(`${String(slide.num).padStart(2,'0')} / ${total}`,CW-60,70);
+  ctx.shadowColor='rgba(0,0,0,0.6)';
+  ctx.shadowBlur=8;
+  ctx.fillText(brand||'',CW-60,72);
   ctx.textAlign='left';
+  ctx.shadowBlur=0;
 
-  // 하단 텍스트 영역 (왼쪽 하단)
-  const baseY = CH - 180;
+  // ── 하단 텍스트 영역 ──
+  const bottomPad=90;
+  let curY=CH-bottomPad;
 
-  // 제목
-  const titleFont=`900 88px 'Noto Serif KR'`;
-  ctx.font=titleFont;
-  ctx.fillStyle=t.text;
-  const titleLines=wrapText(ctx,slide.title,titleFont,CW-120);
-  let ty=baseY - (titleLines.length-1)*106;
-  titleLines.forEach(line=>{ctx.fillText(line,60,ty);ty+=106;});
+  // 해시태그
+  ctx.font=`300 28px 'Noto Sans KR'`;
+  ctx.fillStyle=t.accent;
+  ctx.globalAlpha=0.85;
+  ctx.fillText(slide.tag||'',60,curY);
+  ctx.globalAlpha=1;
+  curY-=52;
+
+  // 본문 (아래서 위로)
+  const bodyFont=`400 40px 'Noto Sans KR'`;
+  ctx.font=bodyFont;
+  const bodyLines=wrapText(ctx,slide.body||'',bodyFont,CW-120);
+  [...bodyLines].reverse().forEach(line=>{
+    ctx.fillStyle=subColor;
+    ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=6;
+    ctx.fillText(line,60,curY);
+    ctx.shadowBlur=0;
+    curY-=56;
+  });
+  curY-=16;
 
   // 구분선
-  ctx.strokeStyle=t.accent; ctx.lineWidth=3; ctx.globalAlpha=0.7;
-  ctx.beginPath(); ctx.moveTo(60,baseY+20); ctx.lineTo(180,baseY+20); ctx.stroke();
+  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.9;
+  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(180,curY); ctx.stroke();
   ctx.globalAlpha=1;
+  curY-=64;
 
-  // 본문
-  const bodyFont=`400 44px 'Noto Sans KR'`;
-  ctx.font=bodyFont; ctx.fillStyle=t.sub;
-  const bodyLines=wrapText(ctx,slide.body,bodyFont,CW-120);
-  let by=baseY+76;
-  bodyLines.slice(0,2).forEach(line=>{ctx.fillText(line,60,by);by+=62;});
+  // 제목 (아래서 위로)
+  const titleFont=`900 82px 'Noto Serif KR'`;
+  ctx.font=titleFont;
+  const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120);
+  [...titleLines].reverse().forEach(line=>{
+    ctx.fillStyle=textColor;
+    ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=10;
+    ctx.fillText(line,60,curY);
+    ctx.shadowBlur=0;
+    curY-=100;
+  });
+  curY-=20;
 
-  // 태그
-  ctx.font=`300 32px 'Noto Sans KR'`;
-  ctx.fillStyle=t.accent; ctx.globalAlpha=0.85;
-  ctx.fillText(slide.tag||'',60,CH-50);
+  // 카테고리 pill
+  const pillText=category||'';
+  ctx.font=`500 28px 'Noto Sans KR'`;
+  const pillW=ctx.measureText(pillText).width+40;
+  const pillH=46;
+  const pillX=60, pillY=curY-pillH;
+  ctx.fillStyle=t.pill;
+  ctx.globalAlpha=0.92;
+  roundRect(ctx,pillX,pillY,pillW,pillH,pillH/2);
+  ctx.fill();
   ctx.globalAlpha=1;
-
-  // 하단 액센트 바
-  ctx.fillStyle=t.accent; ctx.fillRect(0,CH-10,CW,10);
+  ctx.fillStyle='#ffffff';
+  ctx.fillText(pillText,pillX+20,pillY+32);
 
   return canvas;
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
 }
 
 function wrapText(ctx,text,font,maxWidth){
   ctx.font=font;
   const lines=[]; let cur='';
-  for(let ch of text){const test=cur+ch;if(ctx.measureText(test).width>maxWidth&&cur){lines.push(cur);cur=ch;}else{cur=test;}}
+  for(let ch of text){
+    const test=cur+ch;
+    if(ctx.measureText(test).width>maxWidth&&cur){lines.push(cur);cur=ch;}
+    else cur=test;
+  }
   if(cur) lines.push(cur);
   return lines;
 }
@@ -391,29 +499,38 @@ function wrapText(ctx,text,font,maxWidth){
 function renderCards(){
   const grid=document.getElementById('cardsGrid');
   grid.innerHTML='';
-  slides.forEach((slide,i)=>{
-    const c=canvases[i];
-    const preview=document.createElement('canvas');
-    preview.width=c.width; preview.height=c.height;
-    preview.getContext('2d').drawImage(c,0,0);
-    preview.style.width='128px'; preview.style.height='160px';
-    preview.style.borderRadius='6px';
-    preview.className='card-canvas'+(i===selIdx?' active':'');
-    preview.addEventListener('click',()=>selectCard(i));
+  canvases.forEach((c,i)=>{
+    const prev=document.createElement('canvas');
+    prev.width=c.width; prev.height=c.height;
+    prev.getContext('2d').drawImage(c,0,0);
+    prev.style.width='108px'; prev.style.height='135px';
+    prev.style.borderRadius='6px';
+    prev.className='card-canvas'+(i===selIdx?' active':'');
+    prev.addEventListener('click',()=>selectCard(i));
     const dlBtn=document.createElement('button');
-    dlBtn.className='card-dl-btn'; dlBtn.textContent=`${slide.num}번 저장`;
+    dlBtn.className='card-dl-btn'; dlBtn.textContent=`${slides[i].num}번 저장`;
     dlBtn.addEventListener('click',()=>downloadCard(i));
     const wrap=document.createElement('div'); wrap.className='card-wrap';
-    wrap.appendChild(preview); wrap.appendChild(dlBtn);
+    wrap.appendChild(prev); wrap.appendChild(dlBtn);
     grid.appendChild(wrap);
   });
 }
 
-function selectCard(i){selIdx=i;document.querySelectorAll('.card-canvas').forEach((c,idx)=>c.classList.toggle('active',idx===i));renderDetail();}
+function selectCard(i){
+  selIdx=i;
+  document.querySelectorAll('.card-canvas').forEach((c,idx)=>c.classList.toggle('active',idx===i));
+  renderDetail();
+}
+
 function renderDetail(){
   const sl=slides[selIdx];
-  document.getElementById('detailText').innerHTML=`<div class="d-num">${sl.num} / ${slides.length}</div><div class="d-title">${sl.title}</div><div class="d-body">${sl.body.replace(/\n/g,'<br>')}</div><div class="d-tag">${sl.tag||''}</div>`;
+  document.getElementById('detailText').innerHTML=`
+    <div class="d-num">${sl.num} / ${slides.length}</div>
+    <div class="d-title">${sl.title}</div>
+    <div class="d-body">${sl.body.replace(/\n/g,'<br>')}</div>
+    <div class="d-tag">${sl.tag||''}</div>`;
 }
+
 function downloadCard(i){const a=document.createElement('a');a.download=`카드뉴스_${i+1}.png`;a.href=canvases[i].toDataURL('image/png');a.click();}
 function downloadAll(){slides.forEach((_,i)=>setTimeout(()=>downloadCard(i),i*400));showToast('전체 다운로드 시작!');}
 function copyAll(){const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.body}\n${s.tag||''}`).join('\n\n');navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));}
