@@ -63,7 +63,7 @@
   /* 테마 */
   .theme-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
   .theme-scroll::-webkit-scrollbar{display:none;}
-  .theme-btn{flex-shrink:0;width:80px;height:56px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;}
+  .theme-btn{flex-shrink:0;width:100px;height:64px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;}
   .theme-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent);}
   .theme-btn span{font-size:10px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.9);font-weight:500;position:relative;z-index:1;}
   .gen-btn{padding:9px 22px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;align-self:flex-end;}
@@ -274,14 +274,14 @@ const CW=1080, CH=1350;
 const UNSPLASH_KEY='YOUR_ACCESS_KEY_HERE';
 
 const THEMES=[
-  {id:'mint_dark',  name:'민트',    pill:'#3ec9a0', pillText:'#fff', overlay:'rgba(0,15,10,0.62)',  grad:['#051a10','#010c08'], accent:'#3ec9a0'},
-  {id:'sky_dark',   name:'스카이',  pill:'#4ab0f0', pillText:'#fff', overlay:'rgba(0,10,30,0.65)',  grad:['#050f28','#010818'], accent:'#4ab0f0'},
-  {id:'purple_dark',name:'퍼플',    pill:'#9b7de8', pillText:'#fff', overlay:'rgba(10,5,30,0.65)',  grad:['#150a3a','#080318'], accent:'#9b7de8'},
-  {id:'rose_dark',  name:'로즈',    pill:'#f06090', pillText:'#fff', overlay:'rgba(25,0,10,0.65)',  grad:['#280510','#120208'], accent:'#f06090'},
-  {id:'gold_dark',  name:'골드',    pill:'#f0b030', pillText:'#fff', overlay:'rgba(15,8,0,0.65)',   grad:['#1e1000','#0f0800'], accent:'#f0b030'},
-  {id:'forest',     name:'포레스트',pill:'#4caf82', pillText:'#fff', overlay:'rgba(0,18,8,0.65)',   grad:['#041410','#020a06'], accent:'#4caf82'},
-  {id:'minimal',    name:'미니멀',  pill:'#5a3ea0', pillText:'#fff', overlay:'rgba(230,228,245,0.72)',grad:['#f0eff8','#e0ddf0'],accent:'#5a3ea0'},
-  {id:'charcoal',   name:'차콜',    pill:'#aaaaaa', pillText:'#fff', overlay:'rgba(5,5,5,0.70)',    grad:['#1a1a1a','#0a0a0a'], accent:'#cccccc'},
+  {id:'dark_photo',   name:'다크포토',  style:'dark_photo',   pill:'#ffffff', pillBg:'rgba(255,255,255,0.18)', pillText:'#fff', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.88)', bgOverlay:'rgba(0,0,0,0.35)', solidBg:null},
+  {id:'dark_teal',    name:'틸다크',    style:'dark_photo',   pill:'#2dd4bf', pillBg:'rgba(45,212,191,0.25)',  pillText:'#fff', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.85)', bgOverlay:'rgba(0,20,20,0.55)', solidBg:null},
+  {id:'dark_amber',   name:'앰버',      style:'dark_photo',   pill:'#fbbf24', pillBg:'rgba(251,191,36,0.25)',  pillText:'#fff', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.85)', bgOverlay:'rgba(20,10,0,0.55)', solidBg:null},
+  {id:'dark_rose',    name:'로즈다크',  style:'dark_photo',   pill:'#fb7185', pillBg:'rgba(251,113,133,0.25)', pillText:'#fff', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.85)', bgOverlay:'rgba(30,0,10,0.55)', solidBg:null},
+  {id:'navy_solid',   name:'네이비',    style:'navy_solid',   pill:'#f0b030', pillBg:'rgba(240,176,48,0.9)',   pillText:'#1a1a00', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.80)', bgOverlay:null, solidBg:'#1e2d5a'},
+  {id:'light_minimal',name:'라이트',    style:'light_minimal',pill:'#1a1a1a', pillBg:'rgba(26,26,26,0.9)',     pillText:'#fff', titleColor:'#111111', subColor:'rgba(30,30,30,0.70)', bgOverlay:null, solidBg:'#f5f5f0'},
+  {id:'split_photo',  name:'스플릿',    style:'split_photo',  pill:'#222222', pillBg:'rgba(34,34,34,0.85)',    pillText:'#fff', titleColor:'#111111', subColor:'rgba(30,30,30,0.70)', bgOverlay:null, solidBg:'#faf9f6'},
+  {id:'tag_style',    name:'태그',      style:'tag_photo',    pill:'#ffffff', pillBg:'rgba(255,255,255,0.15)', pillText:'#fff', titleColor:'#ffffff', subColor:'rgba(255,255,255,0.85)', bgOverlay:'rgba(0,0,0,0.45)', solidBg:null},
 ];
 
 const CUSTOM_TONES={
@@ -314,12 +314,19 @@ const PLAT={
 let curAcct='avatarcourse', curPlat='instagram', curTheme='mint_dark';
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
+const THEME_PREVIEWS={
+  dark_photo:'linear-gradient(to bottom,#3a3a3a 0%,#111 60%,#000 100%)',
+  navy_solid:'linear-gradient(135deg,#1e2d5a,#0f1a38)',
+  light_minimal:'linear-gradient(135deg,#f5f5f0,#e8e8e0)',
+  split_photo:'linear-gradient(to bottom,#888 0%,#888 50%,#faf9f6 50%,#faf9f6 100%)',
+  tag_photo:'linear-gradient(to bottom,#555 0%,#222 100%)',
+};
 function renderThemeGrid(){
   document.getElementById('themeGrid').innerHTML=THEMES.map(t=>`
     <button class="theme-btn ${t.id===curTheme?'active':''}"
-      style="background:linear-gradient(135deg,${t.grad[0]},${t.grad[1]});border-color:${t.id===curTheme?'#fff':'transparent'}"
+      style="background:${THEME_PREVIEWS[t.style]||'#333'};border-color:${t.id===curTheme?'var(--accent)':'transparent'};box-shadow:${t.id===curTheme?'0 0 0 2px var(--accent)':''}"
       onclick="selTheme('${t.id}')">
-      <span style="background:${t.pill};padding:2px 8px;border-radius:10px;font-size:10px">${t.name}</span>
+      <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);padding:3px 8px;border-radius:8px;font-size:10px;color:#fff;font-weight:500">${t.name}</span>
     </button>`).join('');
 }
 
@@ -485,98 +492,230 @@ ${p.prompt}
 
 function drawCard(slide,idx,total,bgImg,brand,category){
   const t=THEMES.find(x=>x.id===curTheme)||THEMES[0];
-  const isLight=curTheme==='minimal';
-  const textColor=isLight?'#1a1428':'#ffffff';
-  const subColor=isLight?'rgba(30,20,50,0.85)':'rgba(255,255,255,0.88)';
-
   const canvas=document.createElement('canvas');
   canvas.width=CW; canvas.height=CH;
   const ctx=canvas.getContext('2d');
 
-  // 배경 이미지
-  if(bgImg){
-    const scale=Math.max(CW/bgImg.width,CH/bgImg.height);
-    const sw=bgImg.width*scale, sh=bgImg.height*scale;
-    ctx.drawImage(bgImg,(CW-sw)/2,(CH-sh)/2,sw,sh);
+  if(t.style==='split_photo'){
+    drawSplitStyle(ctx,slide,bgImg,brand,category,t);
+  } else if(t.style==='navy_solid'){
+    drawNavyStyle(ctx,slide,bgImg,brand,category,t);
+  } else if(t.style==='light_minimal'){
+    drawLightStyle(ctx,slide,bgImg,brand,category,t);
   } else {
-    const bg=ctx.createLinearGradient(0,0,CW,CH);
-    bg.addColorStop(0,t.grad[0]); bg.addColorStop(1,t.grad[1]);
-    ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
+    drawDarkPhotoStyle(ctx,slide,bgImg,brand,category,t);
   }
+  return canvas;
+}
+
+// ── 스타일 1: 다크 포토 (풀블리드 + 하단 그라디언트) ──
+function drawDarkPhotoStyle(ctx,slide,bgImg,brand,category,t){
+  // 배경
+  if(bgImg){ fitImage(ctx,bgImg,0,0,CW,CH); }
+  else { ctx.fillStyle='#1a1a1a'; ctx.fillRect(0,0,CW,CH); }
 
   // 전체 오버레이
-  ctx.fillStyle=t.overlay; ctx.fillRect(0,0,CW,CH);
+  if(t.bgOverlay){ ctx.fillStyle=t.bgOverlay; ctx.fillRect(0,0,CW,CH); }
 
-  // 하단 강한 그라디언트 (텍스트 영역 가독성)
-  const grad=ctx.createLinearGradient(0,CH*0.38,0,CH);
+  // 하단 블랙 그라디언트 (핵심!)
+  const grad=ctx.createLinearGradient(0,CH*0.35,0,CH);
   grad.addColorStop(0,'rgba(0,0,0,0)');
-  grad.addColorStop(0.4,'rgba(0,0,0,0.45)');
-  grad.addColorStop(1,'rgba(0,0,0,0.90)');
+  grad.addColorStop(0.5,'rgba(0,0,0,0.6)');
+  grad.addColorStop(1,'rgba(0,0,0,0.92)');
   ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
 
-  // ── 우상단 브랜드명 ──
-  ctx.font=`500 32px 'Pretendard'`;
-  ctx.fillStyle='rgba(255,255,255,0.90)';
-  ctx.textAlign='right';
-  ctx.shadowColor='rgba(0,0,0,0.6)';
-  ctx.shadowBlur=8;
-  ctx.fillText(brand||'',CW-60,72);
-  ctx.textAlign='left';
-  ctx.shadowBlur=0;
+  // 브랜드명
+  drawBrand(ctx,brand,'rgba(255,255,255,0.88)');
 
-  // ── 하단 텍스트 영역 (아래서 위로) ──
-  const bottomPad=100;
-  let curY=CH-bottomPad;
-
-  // 중간 제목 (subtitle)
-  if(slide.subtitle){
-    const subtitleFont=`500 54px 'Pretendard'`;
-    ctx.font=subtitleFont;
-    const subtitleLines=wrapText(ctx,slide.subtitle,subtitleFont,CW-120).slice(0,2);
-    [...subtitleLines].reverse().forEach(line=>{
-      ctx.fillStyle=subColor;
-      ctx.shadowColor='rgba(0,0,0,0.75)'; ctx.shadowBlur=8;
-      ctx.fillText(line,60,curY);
-      ctx.shadowBlur=0;
-      curY-=72;
-    });
-    curY-=20;
+  // 하단 텍스트
+  let curY=CH-90;
+  // 태그 스타일이면 pill 여러개
+  if(t.style==='tag_photo'){
+    curY=drawTagPills(ctx,slide.tag||'',t,curY);
+    curY-=30;
   }
+  curY=drawSubtitle(ctx,slide.subtitle,t.subColor,curY);
+  curY=drawDivider(ctx,t.pill,curY);
+  curY=drawTitle(ctx,slide.title,t.titleColor,curY);
+  if(t.style!=='tag_photo'){
+    drawCategoryPill(ctx,category,t,curY);
+  }
+}
 
+// ── 스타일 2: 네이비 솔리드 ──
+function drawNavyStyle(ctx,slide,bgImg,brand,category,t){
+  // 배경색
+  ctx.fillStyle=t.solidBg||'#1e2d5a';
+  ctx.fillRect(0,0,CW,CH);
+
+  // 우상단 원형 장식
+  ctx.globalAlpha=0.12;
+  ctx.fillStyle='#ffffff';
+  ctx.beginPath(); ctx.arc(CW-80,100,180,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(CW-20,160,100,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=1;
+
+  // 하단 그라디언트 강화
+  const grad=ctx.createLinearGradient(0,CH*0.5,0,CH);
+  grad.addColorStop(0,'rgba(0,0,0,0)');
+  grad.addColorStop(1,'rgba(0,0,0,0.45)');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
+
+  drawBrand(ctx,brand,'rgba(255,255,255,0.75)');
+  let curY=CH-100;
+  curY=drawSubtitle(ctx,slide.subtitle,t.subColor,curY);
+  curY=drawDivider(ctx,t.pill,curY);
+  curY=drawTitle(ctx,slide.title,t.titleColor,curY);
+  drawCategoryPill(ctx,category,t,curY);
+}
+
+// ── 스타일 3: 라이트 미니멀 ──
+function drawLightStyle(ctx,slide,bgImg,brand,category,t){
+  ctx.fillStyle=t.solidBg||'#f5f5f0';
+  ctx.fillRect(0,0,CW,CH);
+
+  // 하단 그라디언트 (살짝)
+  const grad=ctx.createLinearGradient(0,CH*0.6,0,CH);
+  grad.addColorStop(0,'rgba(0,0,0,0)');
+  grad.addColorStop(1,'rgba(0,0,0,0.08)');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
+
+  drawBrand(ctx,brand,'rgba(30,30,30,0.55)');
+  let curY=CH-100;
+  curY=drawSubtitle(ctx,slide.subtitle,t.subColor,curY);
+  curY=drawDivider(ctx,'#333333',curY);
+  curY=drawTitle(ctx,slide.title,t.titleColor,curY);
+  drawCategoryPill(ctx,category,t,curY);
+}
+
+// ── 스타일 4: 스플릿 (상단 이미지 + 하단 배경) ──
+function drawSplitStyle(ctx,slide,bgImg,brand,category,t){
+  const splitY=Math.round(CH*0.48);
+  // 상단: 이미지
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0,0,CW,splitY); ctx.clip();
+  if(bgImg){ fitImage(ctx,bgImg,0,0,CW,splitY*2.1); }
+  else { ctx.fillStyle='#888'; ctx.fillRect(0,0,CW,splitY); }
+  ctx.restore();
+
+  // 상단 살짝 어둡게
+  const topGrad=ctx.createLinearGradient(0,0,0,splitY);
+  topGrad.addColorStop(0,'rgba(0,0,0,0.15)');
+  topGrad.addColorStop(1,'rgba(0,0,0,0.05)');
+  ctx.fillStyle=topGrad; ctx.fillRect(0,0,CW,splitY);
+
+  // 하단: 배경색
+  ctx.fillStyle=t.solidBg||'#faf9f6'; ctx.fillRect(0,splitY,CW,CH-splitY);
+
+  // 하단 그라디언트 (살짝)
+  const btmGrad=ctx.createLinearGradient(0,CH*0.75,0,CH);
+  btmGrad.addColorStop(0,'rgba(0,0,0,0)');
+  btmGrad.addColorStop(1,'rgba(0,0,0,0.06)');
+  ctx.fillStyle=btmGrad; ctx.fillRect(0,splitY,CW,CH-splitY);
+
+  // 브랜드 (상단 이미지 위)
+  drawBrand(ctx,brand,'rgba(255,255,255,0.90)');
+
+  // 구분선 (경계)
+  ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,splitY); ctx.lineTo(CW,splitY); ctx.stroke();
+
+  // 하단 텍스트 (상단서 아래로)
+  let ty=splitY+100;
+  if(category){
+    ctx.font=`400 34px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.55)';
+    ctx.textAlign='center'; ctx.fillText(category,CW/2,ty); ctx.textAlign='left';
+    ty+=56;
+  }
+  // 큰 제목 (중앙정렬)
+  ctx.font=`900 96px 'Pretendard'`; ctx.fillStyle=t.titleColor;
+  const tLines=wrapText(ctx,slide.title||'',`900 96px 'Pretendard'`,CW-120).slice(0,2);
+  ctx.textAlign='center';
+  tLines.forEach(line=>{ ctx.fillText(line,CW/2,ty); ty+=114; });
   // 구분선
-  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.85;
+  ctx.strokeStyle='rgba(30,30,30,0.2)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(CW/2-80,ty+10); ctx.lineTo(CW/2+80,ty+10); ctx.stroke();
+  ty+=66;
+  // 중간 제목
+  if(slide.subtitle){
+    ctx.font=`400 46px 'Pretendard'`; ctx.fillStyle=t.subColor;
+    const sLines=wrapText(ctx,slide.subtitle,`400 46px 'Pretendard'`,CW-120).slice(0,2);
+    sLines.forEach(line=>{ ctx.fillText(line,CW/2,ty); ty+=62; });
+  }
+  ctx.textAlign='left';
+}
+
+// ── 공통 헬퍼 ──
+function fitImage(ctx,img,x,y,w,h){
+  const scale=Math.max(w/img.width,h/img.height);
+  const sw=img.width*scale, sh=img.height*scale;
+  ctx.drawImage(img,x+(w-sw)/2,y+(h-sh)/2,sw,sh);
+}
+function drawBrand(ctx,brand,color){
+  if(!brand) return;
+  ctx.save();
+  ctx.font=`500 32px 'Pretendard'`; ctx.fillStyle=color;
+  ctx.textAlign='right';
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
+  ctx.fillText(brand,CW-60,72);
+  ctx.restore();
+}
+function drawTitle(ctx,text,color,curY){
+  if(!text) return curY;
+  const font=`900 96px 'Pretendard'`;
+  ctx.font=font; ctx.fillStyle=color;
+  ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=10;
+  const lines=wrapText(ctx,text,font,CW-120).slice(0,2);
+  [...lines].reverse().forEach(line=>{ ctx.fillText(line,60,curY); curY-=114; });
+  ctx.shadowBlur=0;
+  return curY-24;
+}
+function drawSubtitle(ctx,text,color,curY){
+  if(!text) return curY;
+  const font=`500 52px 'Pretendard'`;
+  ctx.font=font; ctx.fillStyle=color;
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
+  const lines=wrapText(ctx,text,font,CW-120).slice(0,2);
+  [...lines].reverse().forEach(line=>{ ctx.fillText(line,60,curY); curY-=68; });
+  ctx.shadowBlur=0;
+  return curY-16;
+}
+function drawDivider(ctx,color,curY){
+  ctx.strokeStyle=color; ctx.lineWidth=4; ctx.globalAlpha=0.8;
   ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(160,curY); ctx.stroke();
   ctx.globalAlpha=1;
-  curY-=64;
-
-  // 큰 제목
-  const titleFont=`900 96px 'Pretendard'`;
-  ctx.font=titleFont;
-  const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120).slice(0,2);
-  [...titleLines].reverse().forEach(line=>{
-    ctx.fillStyle=textColor;
-    ctx.shadowColor='rgba(0,0,0,0.85)'; ctx.shadowBlur=12;
-    ctx.fillText(line,60,curY);
-    ctx.shadowBlur=0;
-    curY-=116;
-  });
-  curY-=28;
-
-  // 카테고리 pill
-  const pillText=category||'';
-  if(pillText){
-    ctx.font=`500 28px 'Pretendard'`;
-    const pillW=ctx.measureText(pillText).width+44;
-    const pillH=48;
-    const pillX=60, pillY=curY-pillH;
-    ctx.fillStyle=t.pill;
-    ctx.globalAlpha=0.92;
-    roundRect(ctx,pillX,pillY,pillW,pillH,pillH/2);
-    ctx.fill();
+  return curY-60;
+}
+function drawCategoryPill(ctx,text,t,curY){
+  if(!text) return;
+  ctx.font=`500 28px 'Pretendard'`;
+  const pillW=ctx.measureText(text).width+44;
+  const pillH=48;
+  const pillX=60, pillY=curY-pillH;
+  ctx.fillStyle=t.pillBg||t.pill; ctx.globalAlpha=0.92;
+  roundRect(ctx,pillX,pillY,pillW,pillH,pillH/2); ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.fillStyle=t.pillText||'#fff';
+  ctx.fillText(text,pillX+22,pillY+34);
+}
+function drawTagPills(ctx,tagStr,t,curY){
+  const tags=tagStr.split(' ').filter(x=>x.startsWith('#')).slice(0,3);
+  if(!tags.length) return curY;
+  ctx.font=`500 28px 'Pretendard'`;
+  let x=60;
+  const pillH=48;
+  tags.forEach(tag=>{
+    const pillW=ctx.measureText(tag).width+36;
+    ctx.fillStyle='rgba(255,255,255,0.18)';
     ctx.globalAlpha=1;
-    ctx.fillStyle='#ffffff';
-    ctx.fillText(pillText,pillX+22,pillY+34);
-  }
+    roundRect(ctx,x,curY-pillH,pillW,pillH,pillH/2); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.lineWidth=1.5;
+    roundRect(ctx,x,curY-pillH,pillW,pillH,pillH/2); ctx.stroke();
+    ctx.fillStyle='#ffffff'; ctx.fillText(tag,x+18,curY-14);
+    x+=pillW+16;
+  });
+  return curY-pillH-16;
+}
 
   return canvas;
 }
