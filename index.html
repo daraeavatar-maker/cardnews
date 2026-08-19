@@ -93,6 +93,18 @@
   .act-row{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
   .act-btn{padding:7px 14px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer;}
   .act-btn:hover{background:var(--surface2);color:var(--text);}
+  .edit-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-top:14px;}
+  .edit-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .edit-badge{background:var(--accent-l);border:1px solid var(--accent-b);color:var(--accent);font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;}
+  .edit-grid{display:flex;flex-direction:column;gap:10px;}
+  .edit-field{display:flex;flex-direction:column;gap:4px;}
+  .edit-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
+  .edit-inp{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;}
+  .edit-inp:focus{border-color:var(--accent-b);}
+  .edit-ta{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;resize:vertical;line-height:1.6;}
+  .edit-ta:focus{border-color:var(--accent-b);}
+  .edit-apply-btn{margin-left:auto;padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;}
+  .edit-apply-btn:hover{opacity:.88;}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
   @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
@@ -179,7 +191,30 @@
           <button class="dl-all-btn" onclick="downloadAll()">전체 다운로드</button>
         </div>
         <div class="cards-grid" id="cardsGrid"></div>
-        <div class="detail-text" id="detailText"></div>
+
+        <!-- 편집 패널 -->
+        <div class="edit-panel" id="editPanel">
+          <div class="edit-header">
+            <span class="edit-badge" id="editBadge">1 / 5</span>
+            <span style="font-size:12px;color:var(--sub)">슬라이드 내용 수정</span>
+            <button class="edit-apply-btn" onclick="applyEdit()">적용 → 이미지 업데이트</button>
+          </div>
+          <div class="edit-grid">
+            <div class="edit-field">
+              <label class="edit-lbl">제목</label>
+              <input class="edit-inp" id="editTitle" placeholder="제목"/>
+            </div>
+            <div class="edit-field">
+              <label class="edit-lbl">본문</label>
+              <textarea class="edit-ta" id="editBody" rows="3" placeholder="본문"></textarea>
+            </div>
+            <div class="edit-field">
+              <label class="edit-lbl">해시태그</label>
+              <input class="edit-inp" id="editTag" placeholder="#태그1 #태그2 #태그3"/>
+            </div>
+          </div>
+        </div>
+
         <div class="act-row">
           <button class="act-btn" onclick="generate()">↺ 다시 생성</button>
           <button class="act-btn" onclick="copyAll()">전체 텍스트 복사</button>
@@ -524,11 +559,30 @@ function selectCard(i){
 
 function renderDetail(){
   const sl=slides[selIdx];
-  document.getElementById('detailText').innerHTML=`
-    <div class="d-num">${sl.num} / ${slides.length}</div>
-    <div class="d-title">${sl.title}</div>
-    <div class="d-body">${sl.body.replace(/\n/g,'<br>')}</div>
-    <div class="d-tag">${sl.tag||''}</div>`;
+  document.getElementById('editBadge').textContent=`${sl.num} / ${slides.length}`;
+  document.getElementById('editTitle').value=sl.title||'';
+  document.getElementById('editBody').value=sl.body||'';
+  document.getElementById('editTag').value=sl.tag||'';
+}
+
+function applyEdit(){
+  const sl=slides[selIdx];
+  sl.title=document.getElementById('editTitle').value;
+  sl.body=document.getElementById('editBody').value;
+  sl.tag=document.getElementById('editTag').value;
+  // 해당 슬라이드 이미지만 재렌더링
+  const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+  const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+  canvases[selIdx]=drawCard(sl,selIdx,slides.length,bgImgs[selIdx],brand,category);
+  // 썸네일 업데이트
+  const thumbs=document.querySelectorAll('.card-canvas');
+  if(thumbs[selIdx]){
+    const ctx=thumbs[selIdx].getContext('2d');
+    thumbs[selIdx].width=canvases[selIdx].width;
+    thumbs[selIdx].height=canvases[selIdx].height;
+    ctx.drawImage(canvases[selIdx],0,0);
+  }
+  showToast('수정 완료! 이미지가 업데이트됐어요.');
 }
 
 function downloadCard(i){const a=document.createElement('a');a.download=`카드뉴스_${i+1}.png`;a.href=canvases[i].toDataURL('image/png');a.click();}
