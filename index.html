@@ -249,8 +249,12 @@
               <input class="edit-inp" id="editSubtitle" placeholder="부제목"/>
             </div>
             <div class="edit-field">
-              <label class="edit-lbl">캡션</label>
-              <textarea class="edit-ta" id="editBody" rows="3" placeholder="캡션"></textarea>
+              <label class="edit-lbl">본문 <span style="color:var(--muted);font-size:10px">(카드에 표시 — 최대 2줄)</span></label>
+              <textarea class="edit-ta" id="editBody" rows="2" placeholder="카드에 들어갈 본문 2줄"></textarea>
+            </div>
+            <div class="edit-field">
+              <label class="edit-lbl">캡션 <span style="color:var(--muted);font-size:10px">(인스타 게시글 캡션용 — 카드 밖)</span></label>
+              <textarea class="edit-ta" id="editCaption" rows="3" placeholder="인스타그램 게시글에 쓸 캡션 (카드 이미지에는 포함되지 않아요)"></textarea>
             </div>
             <div class="edit-field">
               <label class="edit-lbl">해시태그</label>
@@ -454,7 +458,7 @@ ${p.prompt}
 
 === 출력 형식 ===
 순수 JSON만 출력. 마크다운 없이.
-{"slides":[{"num":1,"title":"15자 이내 강력한 제목","subtitle":"20자 이내 부제목 (제목을 보완하는 한 줄)","caption":"카드 하단 캡션 100자 이내. 핵심 내용 또는 행동 유도. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
+{"slides":[{"num":1,"title":"15자 이내 큰 제목 (강력한 후킹)","subtitle":"20자 이내 중간 제목 (큰 제목 보완)","body":"카드에 표시될 본문 2줄. 50자 이내. 줄바꿈은 \\n","caption":"인스타그램 게시글 캡션. 150자 이내. 저장·공유 유도 포함. 이모지 활용.","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
 
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -524,79 +528,75 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   ctx.textAlign='left';
   ctx.shadowBlur=0;
 
-  // ── 하단 텍스트 영역 ──
-  const bottomPad=90;
+  // ── 하단 텍스트 영역 (아래서 위로) ──
+  const bottomPad=80;
   let curY=CH-bottomPad;
 
-  // 해시태그
-  ctx.font=`300 28px 'Pretendard'`;
-  ctx.fillStyle=t.accent;
-  ctx.globalAlpha=0.85;
-  ctx.fillText(slide.tag||'',60,curY);
-  ctx.globalAlpha=1;
-  curY-=52;
-
-  // 캡션 (아래서 위로)
-  const captionFont=`400 38px 'Pretendard'`;
-  ctx.font=captionFont;
-  const captionText = slide.caption||slide.body||'';
-  const captionLines=wrapText(ctx,captionText,captionFont,CW-120);
-  [...captionLines].reverse().forEach(line=>{
-    ctx.fillStyle=subColor;
-    ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=6;
-    ctx.fillText(line,60,curY);
-    ctx.shadowBlur=0;
-    curY-=54;
-  });
-  curY-=20;
-
-  // 구분선
-  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.9;
-  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(180,curY); ctx.stroke();
-  ctx.globalAlpha=1;
-  curY-=58;
-
-  // 부제목
-  if(slide.subtitle){
-    const subtitleFont=`500 46px 'Pretendard'`;
-    ctx.font=subtitleFont;
-    const subtitleLines=wrapText(ctx,slide.subtitle,subtitleFont,CW-120);
-    [...subtitleLines].reverse().forEach(line=>{
+  // 2줄 본문 (subtitle을 본문으로 사용)
+  const bodyText=slide.body||'';
+  if(bodyText){
+    const bodyFont=`400 40px 'Pretendard'`;
+    ctx.font=bodyFont;
+    const bodyLines=wrapText(ctx,bodyText,bodyFont,CW-120).slice(0,2);
+    [...bodyLines].reverse().forEach(line=>{
       ctx.fillStyle=subColor;
-      ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=8;
+      ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=6;
       ctx.fillText(line,60,curY);
       ctx.shadowBlur=0;
-      curY-=60;
+      curY-=56;
     });
-    curY-=12;
+    curY-=16;
   }
 
-  // 제목 (아래서 위로)
-  const titleFont=`900 82px 'Pretendard'`;
+  // 구분선
+  ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.85;
+  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(160,curY); ctx.stroke();
+  ctx.globalAlpha=1;
+  curY-=56;
+
+  // 중간 제목 (subtitle)
+  if(slide.subtitle){
+    const subtitleFont=`600 52px 'Pretendard'`;
+    ctx.font=subtitleFont;
+    const subtitleLines=wrapText(ctx,slide.subtitle,subtitleFont,CW-120).slice(0,2);
+    [...subtitleLines].reverse().forEach(line=>{
+      ctx.fillStyle=subColor;
+      ctx.shadowColor='rgba(0,0,0,0.75)'; ctx.shadowBlur=8;
+      ctx.fillText(line,60,curY);
+      ctx.shadowBlur=0;
+      curY-=68;
+    });
+    curY-=10;
+  }
+
+  // 큰 제목
+  const titleFont=`900 88px 'Pretendard'`;
   ctx.font=titleFont;
-  const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120);
+  const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120).slice(0,2);
   [...titleLines].reverse().forEach(line=>{
     ctx.fillStyle=textColor;
-    ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=10;
+    ctx.shadowColor='rgba(0,0,0,0.85)'; ctx.shadowBlur=12;
     ctx.fillText(line,60,curY);
     ctx.shadowBlur=0;
-    curY-=100;
+    curY-=108;
   });
-  curY-=20;
+  curY-=24;
 
   // 카테고리 pill
   const pillText=category||'';
-  ctx.font=`500 28px 'Pretendard'`;
-  const pillW=ctx.measureText(pillText).width+40;
-  const pillH=46;
-  const pillX=60, pillY=curY-pillH;
-  ctx.fillStyle=t.pill;
-  ctx.globalAlpha=0.92;
-  roundRect(ctx,pillX,pillY,pillW,pillH,pillH/2);
-  ctx.fill();
-  ctx.globalAlpha=1;
-  ctx.fillStyle='#ffffff';
-  ctx.fillText(pillText,pillX+20,pillY+32);
+  if(pillText){
+    ctx.font=`500 28px 'Pretendard'`;
+    const pillW=ctx.measureText(pillText).width+44;
+    const pillH=48;
+    const pillX=60, pillY=curY-pillH;
+    ctx.fillStyle=t.pill;
+    ctx.globalAlpha=0.92;
+    roundRect(ctx,pillX,pillY,pillW,pillH,pillH/2);
+    ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#ffffff';
+    ctx.fillText(pillText,pillX+22,pillY+34);
+  }
 
   return canvas;
 }
@@ -658,7 +658,8 @@ function renderDetail(){
   document.getElementById('editBadge').textContent=`${sl.num} / ${slides.length}`;
   document.getElementById('editTitle').value=sl.title||'';
   document.getElementById('editSubtitle').value=sl.subtitle||'';
-  document.getElementById('editBody').value=sl.caption||sl.body||'';
+  document.getElementById('editBody').value=sl.body||'';
+  document.getElementById('editCaption').value=sl.caption||'';
   document.getElementById('editTag').value=sl.tag||'';
 }
 
@@ -666,8 +667,8 @@ function applyEdit(){
   const sl=slides[selIdx];
   sl.title=document.getElementById('editTitle').value;
   sl.subtitle=document.getElementById('editSubtitle').value;
-  sl.caption=document.getElementById('editBody').value;
-  sl.body=sl.caption;
+  sl.body=document.getElementById('editBody').value;
+  sl.caption=document.getElementById('editCaption').value;
   sl.tag=document.getElementById('editTag').value;
   // 해당 슬라이드 이미지만 재렌더링
   const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
@@ -720,7 +721,7 @@ function downloadAll(){
     showToast('전체 다운로드 시작!');
   }
 }
-function copyAll(){const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.body}\n${s.tag||''}`).join('\n\n');navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));}
+function copyAll(){const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.subtitle||''}\n${s.body||''}\n\n📝 캡션:\n${s.caption||''}\n${s.tag||''}`).join('\n\n---\n\n');navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));}
 function showErr(msg){const b=document.getElementById('errBar');b.textContent=msg;b.style.display='block';document.getElementById('loading').style.display='none';document.getElementById('genBtn').disabled=false;document.getElementById('genBtn').textContent='생성하기';}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('setupScreen').style.display!=='none')saveKey();});
