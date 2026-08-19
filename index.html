@@ -119,6 +119,20 @@
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
   @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
+  /* 테마 스크롤 래퍼 */
+  .theme-wrap{position:relative;}
+  .theme-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-h);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;backdrop-filter:blur(8px);}
+  .theme-arrow:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .theme-arrow.left{left:-14px;}
+  .theme-arrow.right{right:-14px;}
+  .theme-arrow:disabled{opacity:0.2;cursor:default;}
+  /* 완성 카드 스크롤 래퍼 */
+  .cards-wrap{position:relative;}
+  .cards-arrow{position:absolute;top:50%;transform:translateY(-60px);z-index:10;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-h);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;}
+  .cards-arrow:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .cards-arrow.left{left:-14px;}
+  .cards-arrow.right{right:-14px;}
+  .cards-arrow:disabled{opacity:0.2;cursor:default;}
 </style>
 </head>
 <body>
@@ -205,7 +219,11 @@
 
       <div class="form-card">
         <div class="f-lbl" style="margin-bottom:10px">디자인 테마</div>
-        <div class="theme-scroll" id="themeGrid"></div>
+        <div class="theme-wrap">
+          <button class="theme-arrow left" id="themeArrowL" onclick="scrollTheme(-1)">‹</button>
+          <div class="theme-scroll" id="themeGrid"></div>
+          <button class="theme-arrow right" id="themeArrowR" onclick="scrollTheme(1)">›</button>
+        </div>
       </div>
 
       <div class="err-bar" id="errBar"></div>
@@ -216,7 +234,11 @@
           <span class="sec-title" id="prevLabel">카드 이미지</span>
           <button class="dl-all-btn" onclick="downloadAll()">전체 다운로드</button>
         </div>
-        <div class="cards-grid" id="cardsGrid"></div>
+        <div class="cards-wrap">
+          <button class="cards-arrow left" id="cardsArrowL" onclick="scrollCards(-1)">‹</button>
+          <div class="cards-grid" id="cardsGrid"></div>
+          <button class="cards-arrow right" id="cardsArrowR" onclick="scrollCards(1)">›</button>
+        </div>
         <div class="edit-panel" id="editPanel">
           <div class="edit-header">
             <span class="edit-badge" id="editBadge">1 / 5</span>
@@ -356,7 +378,7 @@ function renderThemeGrid(){
 
 function selTheme(id){
   curTheme=id;
-  renderThemeGrid();
+  renderThemeGrid(); setTimeout(updateThemeArrows,100);
   if(slides.length){
     const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
     const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
@@ -392,6 +414,11 @@ window.addEventListener('load',()=>{
   if(k) showApp(); else showSetup();
   renderThemeGrid();
   selAcct('avatarcourse');
+  setTimeout(()=>{
+    updateThemeArrows();
+    addSwipe('themeGrid', scrollTheme);
+    addSwipe('cardsGrid', scrollCards);
+  }, 100);
 });
 
 function showSetup(){document.getElementById('setupScreen').style.display='flex';document.getElementById('appScreen').style.display='none';}
@@ -499,7 +526,7 @@ ${p.prompt}
     document.getElementById('loadingMsg').textContent='카드 이미지 렌더링 중...';
     canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
     selIdx=0;
-    renderCards(); renderDetail();
+    renderCards(); renderDetail(); setTimeout(updateCardsArrows,100);
     document.getElementById('preview').style.display='block';
     document.getElementById('prevLabel').textContent=`카드 이미지 — ${a.name} · ${PLAT[curPlat].name}`;
   }catch(e){showErr('생성 실패: '+e.message);}
@@ -1264,6 +1291,47 @@ function downloadAll(){
 function copyAll(){
   const text=slides.map(s=>`[${s.num}/${slides.length}] ${s.title}\n${s.subtitle||''}\n\n📝 캡션:\n${s.caption||''}\n${s.tag||''}`).join('\n\n---\n\n');
   navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));
+}
+
+// 테마 스크롤
+function scrollTheme(dir){
+  const el=document.getElementById('themeGrid');
+  el.scrollBy({left:dir*220,behavior:'smooth'});
+  setTimeout(updateThemeArrows,300);
+}
+function updateThemeArrows(){
+  const el=document.getElementById('themeGrid');
+  const l=document.getElementById('themeArrowL');
+  const r=document.getElementById('themeArrowR');
+  if(l) l.disabled=el.scrollLeft<10;
+  if(r) r.disabled=el.scrollLeft+el.clientWidth>=el.scrollWidth-10;
+}
+
+// 카드 스크롤
+function scrollCards(dir){
+  const el=document.getElementById('cardsGrid');
+  el.scrollBy({left:dir*240,behavior:'smooth'});
+  setTimeout(updateCardsArrows,300);
+}
+function updateCardsArrows(){
+  const el=document.getElementById('cardsGrid');
+  const l=document.getElementById('cardsArrowL');
+  const r=document.getElementById('cardsArrowR');
+  if(!el||!l||!r) return;
+  l.disabled=el.scrollLeft<10;
+  r.disabled=el.scrollLeft+el.clientWidth>=el.scrollWidth-10;
+}
+
+// 스와이프 (터치)
+function addSwipe(elId, scrollFn){
+  const el=document.getElementById(elId);
+  if(!el) return;
+  let startX=0;
+  el.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=startX-e.changedTouches[0].clientX;
+    if(Math.abs(dx)>40) scrollFn(dx>0?1:-1);
+  },{passive:true});
 }
 
 function showErr(msg){const b=document.getElementById('errBar');b.textContent=msg;b.style.display='block';document.getElementById('loading').style.display='none';document.getElementById('genBtn').disabled=false;document.getElementById('genBtn').textContent='생성하기';}
