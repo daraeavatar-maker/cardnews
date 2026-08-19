@@ -245,8 +245,12 @@
               <input class="edit-inp" id="editTitle" placeholder="제목"/>
             </div>
             <div class="edit-field">
-              <label class="edit-lbl">본문</label>
-              <textarea class="edit-ta" id="editBody" rows="3" placeholder="본문"></textarea>
+              <label class="edit-lbl">부제목</label>
+              <input class="edit-inp" id="editSubtitle" placeholder="부제목"/>
+            </div>
+            <div class="edit-field">
+              <label class="edit-lbl">캡션</label>
+              <textarea class="edit-ta" id="editBody" rows="3" placeholder="캡션"></textarea>
             </div>
             <div class="edit-field">
               <label class="edit-lbl">해시태그</label>
@@ -450,7 +454,7 @@ ${p.prompt}
 
 === 출력 형식 ===
 순수 JSON만 출력. 마크다운 없이.
-{"slides":[{"num":1,"title":"15자 이내 강력한 제목","body":"실질적이고 구체적인 본문 70자 이내. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어 (주제와 감성에 맞게)"}]}`;
+{"slides":[{"num":1,"title":"15자 이내 강력한 제목","subtitle":"20자 이내 부제목 (제목을 보완하는 한 줄)","caption":"카드 하단 캡션 100자 이내. 핵심 내용 또는 행동 유도. 줄바꿈은 \\n","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
 
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -532,24 +536,40 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   ctx.globalAlpha=1;
   curY-=52;
 
-  // 본문 (아래서 위로)
-  const bodyFont=`400 40px 'Pretendard'`;
-  ctx.font=bodyFont;
-  const bodyLines=wrapText(ctx,slide.body||'',bodyFont,CW-120);
-  [...bodyLines].reverse().forEach(line=>{
+  // 캡션 (아래서 위로)
+  const captionFont=`400 38px 'Pretendard'`;
+  ctx.font=captionFont;
+  const captionText = slide.caption||slide.body||'';
+  const captionLines=wrapText(ctx,captionText,captionFont,CW-120);
+  [...captionLines].reverse().forEach(line=>{
     ctx.fillStyle=subColor;
     ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=6;
     ctx.fillText(line,60,curY);
     ctx.shadowBlur=0;
-    curY-=56;
+    curY-=54;
   });
-  curY-=16;
+  curY-=20;
 
   // 구분선
   ctx.strokeStyle=t.pill; ctx.lineWidth=4; ctx.globalAlpha=0.9;
   ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(180,curY); ctx.stroke();
   ctx.globalAlpha=1;
-  curY-=64;
+  curY-=58;
+
+  // 부제목
+  if(slide.subtitle){
+    const subtitleFont=`500 46px 'Pretendard'`;
+    ctx.font=subtitleFont;
+    const subtitleLines=wrapText(ctx,slide.subtitle,subtitleFont,CW-120);
+    [...subtitleLines].reverse().forEach(line=>{
+      ctx.fillStyle=subColor;
+      ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=8;
+      ctx.fillText(line,60,curY);
+      ctx.shadowBlur=0;
+      curY-=60;
+    });
+    curY-=12;
+  }
 
   // 제목 (아래서 위로)
   const titleFont=`900 82px 'Pretendard'`;
@@ -637,14 +657,17 @@ function renderDetail(){
   const sl=slides[selIdx];
   document.getElementById('editBadge').textContent=`${sl.num} / ${slides.length}`;
   document.getElementById('editTitle').value=sl.title||'';
-  document.getElementById('editBody').value=sl.body||'';
+  document.getElementById('editSubtitle').value=sl.subtitle||'';
+  document.getElementById('editBody').value=sl.caption||sl.body||'';
   document.getElementById('editTag').value=sl.tag||'';
 }
 
 function applyEdit(){
   const sl=slides[selIdx];
   sl.title=document.getElementById('editTitle').value;
-  sl.body=document.getElementById('editBody').value;
+  sl.subtitle=document.getElementById('editSubtitle').value;
+  sl.caption=document.getElementById('editBody').value;
+  sl.body=sl.caption;
   sl.tag=document.getElementById('editTag').value;
   // 해당 슬라이드 이미지만 재렌더링
   const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
