@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>카드뉴스 생성기</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
   :root{--bg:#0d0d0f;--surface:#17171a;--surface2:#1f1f24;--border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.16);--text:#f0eff4;--sub:#8b8a96;--muted:#4a4955;--accent:#7c5cbf;--accent-l:rgba(124,92,191,0.15);--accent-b:rgba(124,92,191,0.4);--danger:#e05a5a;--success:#4caf82;--r:12px;--rs:8px;}
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;min-height:100vh;}
+  body{background:var(--bg);color:var(--text);font-family:'Pretendard',sans-serif;font-size:14px;min-height:100vh;}
   .setup-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
   .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:420px;}
   .setup-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
@@ -50,7 +50,7 @@
   .form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
   .fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px;}
   .f-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
-  .f-inp,.f-sel{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
+  .f-inp,.f-sel{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Pretendard',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
   .f-inp:focus,.f-sel:focus{border-color:var(--accent-b);}
   .f-inp::placeholder{color:var(--muted);}
   .f-sel{cursor:pointer;}
@@ -99,9 +99,9 @@
   .edit-grid{display:flex;flex-direction:column;gap:10px;}
   .edit-field{display:flex;flex-direction:column;gap:4px;}
   .edit-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;}
-  .edit-inp{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;}
+  .edit-inp{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Pretendard',sans-serif;font-size:14px;outline:none;}
   .edit-inp:focus{border-color:var(--accent-b);}
-  .edit-ta{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;outline:none;resize:vertical;line-height:1.6;}
+  .edit-ta{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Pretendard',sans-serif;font-size:14px;outline:none;resize:vertical;line-height:1.6;}
   .edit-ta:focus{border-color:var(--accent-b);}
   .edit-apply-btn{margin-left:auto;padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;}
   .edit-apply-btn:hover{opacity:.88;}
@@ -435,7 +435,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
 
   // ── 우상단 브랜드명 ──
-  ctx.font=`500 32px 'Noto Sans KR'`;
+  ctx.font=`500 32px 'Pretendard'`;
   ctx.fillStyle='rgba(255,255,255,0.90)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.6)';
@@ -449,7 +449,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   let curY=CH-bottomPad;
 
   // 해시태그
-  ctx.font=`300 28px 'Noto Sans KR'`;
+  ctx.font=`300 28px 'Pretendard'`;
   ctx.fillStyle=t.accent;
   ctx.globalAlpha=0.85;
   ctx.fillText(slide.tag||'',60,curY);
@@ -457,7 +457,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   curY-=52;
 
   // 본문 (아래서 위로)
-  const bodyFont=`400 40px 'Noto Sans KR'`;
+  const bodyFont=`400 40px 'Pretendard'`;
   ctx.font=bodyFont;
   const bodyLines=wrapText(ctx,slide.body||'',bodyFont,CW-120);
   [...bodyLines].reverse().forEach(line=>{
@@ -476,7 +476,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   curY-=64;
 
   // 제목 (아래서 위로)
-  const titleFont=`900 82px 'Noto Serif KR'`;
+  const titleFont=`900 82px 'Pretendard'`;
   ctx.font=titleFont;
   const titleLines=wrapText(ctx,slide.title||'',titleFont,CW-120);
   [...titleLines].reverse().forEach(line=>{
@@ -490,7 +490,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
 
   // 카테고리 pill
   const pillText=category||'';
-  ctx.font=`500 28px 'Noto Sans KR'`;
+  ctx.font=`500 28px 'Pretendard'`;
   const pillW=ctx.measureText(pillText).width+40;
   const pillH=46;
   const pillX=60, pillY=curY-pillH;
