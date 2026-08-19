@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>카드뉴스 생성기</title>
+<title>카드뉴스 생성기 by Darae</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
   :root{--bg:#0d0d0f;--surface:#17171a;--surface2:#1f1f24;--border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.16);--text:#f0eff4;--sub:#8b8a96;--muted:#4a4955;--accent:#7c5cbf;--accent-l:rgba(124,92,191,0.15);--accent-b:rgba(124,92,191,0.4);--danger:#e05a5a;--success:#4caf82;--r:12px;--rs:8px;}
@@ -127,7 +127,7 @@
 <div class="app-screen" id="appScreen">
   <div class="layout">
     <aside class="sidebar">
-      <div class="logo"><div class="logo-mark">🌱</div><div><div class="logo-text">카드뉴스</div><div class="logo-sub">생성기</div></div></div>
+      <div class="logo"><div class="logo-mark">🌱</div><div><div class="logo-text">카드뉴스 생성기</div><div class="logo-sub">by Darae</div></div></div>
       <div class="s-section">
         <div class="s-label">계정</div>
         <button class="acct-btn active" onclick="selAcct('avatarcourse')" id="btn-avatarcourse"><span class="acct-icon">🌱</span><div><div class="acct-name">아봐타코스</div><div class="acct-desc">의식계발교육</div></div></button>
@@ -139,7 +139,7 @@
     </aside>
 
     <main class="main">
-      <div class="page-title">카드뉴스 생성기</div>
+      <div class="page-title">카드뉴스 생성기 by Darae</div>
       <div class="page-sub">인스타그램 4:5 카드뉴스를 자동으로 만들어드려요.</div>
 
       <!-- 주제 + 브랜드 + 카테고리 -->
@@ -152,6 +152,8 @@
           <div class="fg" style="max-width:80px">
             <div class="f-lbl">슬라이드</div>
             <select class="f-sel" id="slideCount">
+              <option value="1">1장</option>
+              <option value="2">2장</option>
               <option value="3">3장</option><option value="4">4장</option><option value="5" selected>5장</option><option value="6">6장</option><option value="7">7장</option>
             </select>
           </div>
