@@ -502,11 +502,12 @@ ${p.prompt}
 - 제목: 읽는 순간 멈추게 만드는 강력한 한 줄. 질문형, 숫자형, 반전형 활용
 - 부제목: 제목을 보완하는 한 줄. 구체적이고 실질적인 내용
 - 감정: 공감 → 인사이트 → 행동 유도 흐름으로 구성
-- 마지막 슬라이드: 반드시 저장/공유/댓글 유도 문구 포함
+- CTA(행동 유도): 반드시 마지막 슬라이드에만 포함. 나머지 슬라이드는 CTA 없이 내용에만 집중.
+- 마지막 슬라이드 CTA: "저장해두세요", "공유해주세요", "댓글로 알려주세요" 등 명확한 행동 유도 문구
 
 === 출력 형식 ===
 순수 JSON만 출력. 마크다운 없이.
-{"slides":[{"num":1,"title":"15자 이내 큰 제목 (강력한 후킹)","subtitle":"20자 이내 부제목 (큰 제목 보완)","caption":"인스타그램 게시글 캡션. 150자 이내. 저장·공유 유도 포함. 이모지 활용.","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
+{"slides":[{"num":1,"title":"15자 이내 큰 제목 (강력한 후킹)","subtitle":"20자 이내 부제목 (큰 제목 보완)","cta":"마지막 슬라이드에만 작성. 나머지는 빈 문자열. 예: 이 글이 도움됐다면 저장해두세요 📌","caption":"인스타그램 게시글 캡션. 150자 이내. 저장·공유 유도 포함. 이모지 활용.","tag":"#태그1 #태그2 #태그3","imgQuery":"영문 이미지 검색어 3단어"}]}`;
 
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -664,6 +665,55 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   return canvas;
 }
 
+// CTA 공통 렌더링 함수
+function drawCTA(ctx,slide,x,y,align){
+  if(!slide.cta || !slide.cta.trim()) return y;
+  const isCenter = align==='center';
+  const midX = isCenter ? CW/2 : x;
+  // CTA 배경 박스
+  ctx.font=`600 36px 'Pretendard'`;
+  const ctaW = isCenter ? CW-120 : CW-x*2;
+  const ctaH = 80;
+  const ctaY = y;
+  // 반투명 배경
+  ctx.fillStyle='rgba(255,255,255,0.12)';
+  ctx.strokeStyle='rgba(255,255,255,0.3)';
+  ctx.lineWidth=1.5;
+  if(isCenter){
+    roundRect(ctx,60,ctaY,ctaW,ctaH,ctaH/2);
+  } else {
+    roundRect(ctx,x,ctaY,ctaW,ctaH,ctaH/2);
+  }
+  ctx.fill(); ctx.stroke();
+  // CTA 텍스트
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign=isCenter?'center':'left';
+  const ctaLines=wrapText(ctx,slide.cta,`600 34px 'Pretendard'`,ctaW-60).slice(0,1);
+  ctx.font=`600 34px 'Pretendard'`;
+  ctaLines.forEach(line=>{
+    ctx.fillText(line, isCenter?midX:x+30, ctaY+50);
+  });
+  ctx.textAlign='left';
+  return y + ctaH + 20;
+}
+
+// 라이트 스타일용 CTA (어두운 버전)
+function drawCTADark(ctx,slide,x,y,maxW){
+  if(!slide.cta || !slide.cta.trim()) return y;
+  ctx.font=`600 34px 'Pretendard'`;
+  const ctaW = maxW||CW-x*2;
+  const ctaH = 78;
+  ctx.fillStyle='rgba(17,17,17,0.88)';
+  ctx.strokeStyle='rgba(0,0,0,0.15)';
+  ctx.lineWidth=1.5;
+  roundRect(ctx,x,y,ctaW,ctaH,ctaH/2);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#ffffff';
+  const ctaLines=wrapText(ctx,slide.cta,`600 34px 'Pretendard'`,ctaW-60).slice(0,1);
+  ctaLines.forEach(line=>ctx.fillText(line,x+30,y+50));
+  return y + ctaH + 20;
+}
+
 // ══════════════════════════════════════
 // 스타일 1: 상단 제목 (미리캔버스 스타일)
 // 카테고리 좌상단 → 큰제목 → 부제목 → 이미지 하단
@@ -727,6 +777,8 @@ function drawTopTitleStyle(ctx,slide,bgImg,brand,category,t){
     ctx.fillRect(60,imgTop,CW-120,Math.max(imgH,200));
   }
 
+  // CTA (마지막 슬라이드)
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,CH-160,CW-120); }
   // 하단 태그
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.4)';
   ctx.fillText(slide.tag||'',60,CH-30);
@@ -786,8 +838,10 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
   if(slide.subtitle){
     ctx.font=`400 44px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.6)';
     const sLines=wrapText(ctx,slide.subtitle,`400 44px 'Pretendard'`,CW-120).slice(0,1);
-    sLines.forEach(line=>{ctx.fillText(line,60,by);});
+    sLines.forEach(line=>{ctx.fillText(line,60,by); by+=56;});
   }
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,by+10,CW-120); }
 }
 
 // ══════════════════════════════════════
@@ -849,6 +903,8 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
     sLines.forEach(line=>{ctx.fillText(line,60,ty); ty+=60;});
   }
 
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,CH-180,CW-120); }
   // 태그 (하단)
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.35)';
   ctx.fillText(slide.tag||'',60,CH-40);
@@ -903,9 +959,11 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
     sLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=62;});
   }
 
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,60,CH-200,'center'); ctx.textAlign='left'; }
   // 해시태그 (하단 중앙)
-  ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)';
-  ctx.fillText(slide.tag||'',midX,CH-60);
+  ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='center';
+  ctx.fillText(slide.tag||'',midX,CH-40);
   ctx.textAlign='left';
 }
 
@@ -972,9 +1030,11 @@ function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
     sLines.forEach(line=>{ctx.fillText(line,110,ty); ty+=58;});
   }
 
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,110,CH-180,CW-160); }
   // 태그
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.3)';
-  ctx.fillText(slide.tag||'',110,CH-50);
+  ctx.fillText(slide.tag||'',110,CH-40);
 }
 
 // ══════════════════════════════════════
@@ -1036,6 +1096,8 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     sLines.forEach(line=>{ctx.fillText(line,cx,ty); ty+=58;});
   }
 
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTADark(ctx,slide,60,CH-190,CW-120); ctx.textAlign='center'; }
   // 태그 (하단)
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
   ctx.fillText(slide.tag||'',cx,CH-44);
@@ -1099,9 +1161,11 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
     sLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=58;});
   }
 
+  // CTA
+  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,60,CH-220,'center'); ctx.textAlign='left'; }
   // 태그 (카드 하단)
-  ctx.font=`300 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText(slide.tag||'',midX,CH-60);
+  ctx.font=`300 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='center';
+  ctx.fillText(slide.tag||'',midX,CH-50);
   ctx.textAlign='left';
 }
 
@@ -1153,6 +1217,8 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   [...tLines].reverse().forEach(line=>{ctx.fillText(line,60,curY); curY-=112;});
   ctx.shadowBlur=0; curY-=20;
 
+  // CTA (카테고리 pill 위)
+  if(slide.cta&&slide.cta.trim()){ drawCTA(ctx,slide,60,curY-160); curY-=110; }
   // 카테고리 pill
   if(category){
     ctx.font=`500 28px 'Pretendard'`;
