@@ -107,10 +107,10 @@
   /* 테마 미리보기 */
   .theme-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
   .theme-scroll::-webkit-scrollbar{display:none;}
-  .theme-card{flex-shrink:0;width:130px;cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid transparent;transition:all .2s;position:relative;}
+  .theme-card{flex-shrink:0;width:180px;cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid transparent;transition:all .2s;position:relative;}
   .theme-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
   .theme-card.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-b);}
-  .theme-card canvas{width:130px;height:163px;display:block;}
+  .theme-card canvas{width:180px;height:225px;display:block;}
   .theme-card-label{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);color:#fff;font-size:11px;font-weight:600;text-align:center;}
   .theme-card .zoom-hint{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);color:#fff;font-size:11px;padding:4px 10px;border-radius:20px;white-space:nowrap;backdrop-filter:blur(4px);}
   .theme-card:hover .zoom-hint{display:block;}
@@ -357,7 +357,7 @@ function renderThemeGrid(){
     };
     if(fnMap[t.style]) fnMap[t.style](); else drawInstaDarkStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t);
     curTheme = savedTheme;
-    c.style.width = '130px'; c.style.height = '163px';
+    c.style.width = '180px'; c.style.height = '225px';
 
     // 확대 버튼
     const zoomHint = document.createElement('div');
@@ -685,7 +685,7 @@ function drawPill(ctx, text, x, y, dark){
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
   }
   ctx.fillText(text,x+20,y+32);
-  return y+pH+36; // pill 높이 + 간격 반환
+  return y+pH+20; // pill 높이 + 간격 반환
 }
 
 // 제목 그리고 y 반환
@@ -695,9 +695,11 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   ctx.font=font; ctx.fillStyle=color||'#111';
   ctx.shadowColor='rgba(0,0,0,0.06)'; ctx.shadowBlur=4;
   const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,2);
-  lines.forEach(line=>{ ctx.fillText(line,x,y); y+=104; });
+  // fillText y는 baseline이므로 첫줄에 ascent(72px) 추가
+  let ty = y + 72;
+  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=104; });
   ctx.shadowBlur=0;
-  return y+8;
+  return ty + 16; // 마지막 줄 아래 여백 포함해서 반환
 }
 
 // 부제목 그리고 y 반환
@@ -706,15 +708,16 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   const font=`400 42px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
   const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,1);
-  lines.forEach(line=>{ ctx.fillText(line,x,y); y+=54; });
-  return y+8;
+  let ty = y + 36; // ascent 오프셋
+  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=54; });
+  return ty + 8;
 }
 
 // 구분선 그리고 y 반환
 function drawDivLine(ctx, x, y, len, color){
   ctx.strokeStyle=color||'rgba(0,0,0,0.10)'; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+(len||160),y); ctx.stroke();
-  return y+36;
+  return y+28;
 }
 
 // CTA 공통 렌더링 함수
