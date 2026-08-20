@@ -276,28 +276,17 @@ const CW=1080, CH=1350;
 const UNSPLASH_KEY='YOUR_ACCESS_KEY_HERE';
 
 const THEMES=[
-  // 1. 인스타 감성 - 기본 (흰 pill)
-  {id:'insta_dark',      name:'인스타감성',  style:'insta_dark',  pillStyle:'white'},
-  // 2. 인스타 감성 - 민트 pill
-  {id:'insta_mint',      name:'인스타민트',  style:'insta_dark',  pillStyle:'mint'},
-  // 3. 인스타 감성 - 앰버 pill
-  {id:'insta_amber',     name:'인스타앰버',  style:'insta_dark',  pillStyle:'amber'},
-  // 4. 인스타 감성 - 로즈 pill
-  {id:'insta_rose',      name:'인스타로즈',  style:'insta_dark',  pillStyle:'rose'},
-  // 5. 상단 제목
-  {id:'top_title',       name:'상단제목',    style:'top_title',   pillStyle:'dark'},
-  // 6. 텍스트박스
-  {id:'text_box',        name:'텍스트박스',  style:'text_box',    pillStyle:'dark'},
-  // 7. 스플릿
-  {id:'split_clean',     name:'스플릿',      style:'split_clean', pillStyle:'dark'},
-  // 8. 타이포
-  {id:'typo_center',     name:'타이포',      style:'typo_center', pillStyle:'white'},
-  // 9. 사이드바
-  {id:'sidebar_bar',     name:'사이드바',    style:'sidebar_bar', pillStyle:'dark'},
-  // 10. 원형프레임
-  {id:'circle_img',      name:'원형프레임',  style:'circle_img',  pillStyle:'dark'},
-  // 11. 카드오버레이
-  {id:'card_overlay',    name:'카드오버레이',style:'card_overlay',pillStyle:'white'},
+  {id:'insta_dark',   name:'인스타',    style:'insta_dark',  pillStyle:'white', previewBg:'linear-gradient(to bottom,#2a2a2a,#080808)'},
+  {id:'insta_mint',   name:'민트',      style:'insta_dark',  pillStyle:'mint',  previewBg:'linear-gradient(to bottom,#0a2020,#040e0e)'},
+  {id:'insta_amber',  name:'앰버',      style:'insta_dark',  pillStyle:'amber', previewBg:'linear-gradient(to bottom,#1e1200,#0a0600)'},
+  {id:'insta_rose',   name:'로즈',      style:'insta_dark',  pillStyle:'rose',  previewBg:'linear-gradient(to bottom,#200810,#0a0408)'},
+  {id:'top_title',    name:'상단제목',  style:'top_title',   pillStyle:'dark',  previewBg:'linear-gradient(135deg,#f5f5f0,#e8e8e0)'},
+  {id:'text_box',     name:'텍스트박스',style:'text_box',    pillStyle:'dark',  previewBg:'linear-gradient(to bottom,#555,#222)'},
+  {id:'split_clean',  name:'스플릿',    style:'split_clean', pillStyle:'dark',  previewBg:'linear-gradient(to bottom,#888 0%,#888 50%,#faf9f6 50%)'},
+  {id:'typo_center',  name:'타이포',    style:'typo_center', pillStyle:'white', previewBg:'linear-gradient(to bottom,#111,#000)'},
+  {id:'sidebar_bar',  name:'사이드바',  style:'sidebar_bar', pillStyle:'dark',  previewBg:'linear-gradient(135deg,#fafafa,#ebebeb)'},
+  {id:'circle_img',   name:'원형프레임',style:'circle_img',  pillStyle:'dark',  previewBg:'linear-gradient(135deg,#f8f6f2,#ece9e2)'},
+  {id:'card_overlay', name:'카드오버레이',style:'card_overlay',pillStyle:'white',previewBg:'linear-gradient(to bottom,#3a3a3a,#111)'},
 ];
 
 const CUSTOM_TONES={
@@ -344,7 +333,6 @@ function renderThemeGrid(){
     wrap.className = 'theme-card' + (t.id===curTheme?' active':'');
     wrap.onclick = (e) => { e.stopPropagation(); selTheme(t.id); };
 
-    // 샘플 카드 Canvas 그리기
     const c = document.createElement('canvas');
     c.width = 1080; c.height = 1350;
     const ctx = c.getContext('2d');
@@ -352,7 +340,9 @@ function renderThemeGrid(){
     const sampleBrand = 'Brand';
     const sampleCat = '카테고리';
     const savedTheme = curTheme;
+    const savedPill = curPillStyle;
     curTheme = t.id;
+    curPillStyle = t.pillStyle||'white';
     const fnMap={
       top_title:    ()=>drawTopTitleStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       text_box:     ()=>drawTextBoxStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
@@ -365,6 +355,7 @@ function renderThemeGrid(){
     };
     if(fnMap[t.style]) fnMap[t.style](); else drawInstaDarkStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t);
     curTheme = savedTheme;
+    curPillStyle = savedPill;
     c.style.width = '180px'; c.style.height = '225px';
 
     // 확대 버튼
@@ -679,11 +670,11 @@ function drawCard(slide,idx,total,bgImg,brand,category){
 // pill 색상 가져오기
 function getPillColors(style){
   const map={
-    white: {bg:'rgba(255,255,255,0.18)', border:'rgba(255,255,255,0.40)', text:'#ffffff'},
-    mint:  {bg:'rgba(45,212,191,0.30)',  border:'rgba(45,212,191,0.70)',  text:'#ffffff'},
-    amber: {bg:'rgba(251,191,36,0.30)',  border:'rgba(251,191,36,0.70)',  text:'#ffffff'},
-    rose:  {bg:'rgba(251,113,133,0.30)', border:'rgba(251,113,133,0.70)',text:'#ffffff'},
-    dark:  {bg:'rgba(17,17,17,0.88)',    border:'rgba(17,17,17,0.15)',    text:'#ffffff'},
+    white: {bg:'rgba(255,255,255,0.20)', border:'rgba(255,255,255,0.55)', text:'#ffffff'},
+    mint:  {bg:'rgba(45,212,191,0.85)',  border:'rgba(45,212,191,1.00)',  text:'#ffffff'},
+    amber: {bg:'rgba(251,191,36,0.90)',  border:'rgba(251,191,36,1.00)',  text:'#111111'},
+    rose:  {bg:'rgba(251,113,133,0.90)', border:'rgba(251,113,133,1.00)',text:'#ffffff'},
+    dark:  {bg:'rgba(17,17,17,0.90)',    border:'rgba(17,17,17,0.20)',    text:'#ffffff'},
   };
   return map[style]||map['white'];
 }
@@ -1179,7 +1170,11 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
 // ══════════════════════════════════════
 function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   if(bgImg){fitImage(ctx,bgImg,0,0,CW,CH);}
-  else{ctx.fillStyle='#1a1a1a'; ctx.fillRect(0,0,CW,CH);}
+  else{
+    // 이미지 없을 때 테마별 배경색
+    const bgMap={insta_dark:'#1a1a1a',insta_mint:'#0a1f1f',insta_amber:'#1a1000',insta_rose:'#1f0810'};
+    ctx.fillStyle=bgMap[t.id]||'#1a1a1a'; ctx.fillRect(0,0,CW,CH);
+  }
 
   const grad=ctx.createLinearGradient(0,CH*0.28,0,CH);
   grad.addColorStop(0,'rgba(0,0,0,0)');
