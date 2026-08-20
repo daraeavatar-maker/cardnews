@@ -576,7 +576,7 @@ function drawBrand(ctx,brand,color){
   ctx.font=`500 32px 'Pretendard'`; ctx.fillStyle=color;
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand,CW-60,72);
+  ctx.fillText(brand,CW-90,72);
   ctx.restore();
 }
 
@@ -585,7 +585,7 @@ function drawTitle(ctx,text,color,curY){
   const font=`900 96px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color;
   ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=10;
-  const lines=wrapText(ctx,text,font,CW-120).slice(0,2);
+  const lines=wrapText(ctx,text,font,CW-180).slice(0,2);
   [...lines].reverse().forEach(line=>{ctx.fillText(line,60,curY); curY-=114;});
   ctx.shadowBlur=0;
   return curY-24;
@@ -596,7 +596,7 @@ function drawSubtitle(ctx,text,color,curY){
   const font=`500 52px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color;
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  const lines=wrapText(ctx,text,font,CW-120).slice(0,2);
+  const lines=wrapText(ctx,text,font,CW-180).slice(0,2);
   [...lines].reverse().forEach(line=>{ctx.fillText(line,60,curY); curY-=68;});
   ctx.shadowBlur=0;
   return curY-16;
@@ -604,7 +604,7 @@ function drawSubtitle(ctx,text,color,curY){
 
 function drawDivider(ctx,color,curY){
   ctx.strokeStyle=color; ctx.lineWidth=4; ctx.globalAlpha=0.8;
-  ctx.beginPath(); ctx.moveTo(60,curY); ctx.lineTo(160,curY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(90,curY); ctx.lineTo(170,curY); ctx.stroke();
   ctx.globalAlpha=1;
   return curY-60;
 }
@@ -706,7 +706,7 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   const font=`900 88px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'#111';
   ctx.shadowColor='rgba(0,0,0,0.05)'; ctx.shadowBlur=4;
-  const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,2);
+  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=110; });
   ctx.shadowBlur=0;
@@ -720,7 +720,7 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   ctx.textBaseline='top';
   const font=`400 42px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
-  const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,2);
+  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=56; });
   ctx.restore();
@@ -740,7 +740,7 @@ function drawCTA(ctx,slide,x,y,align){
   const midX = isCenter ? CW/2 : x;
   // CTA 배경 박스
   ctx.font=`600 36px 'Pretendard'`;
-  const ctaW = isCenter ? CW-120 : CW-x*2;
+  const ctaW = isCenter ? CW-180 : CW-x*2;
   const ctaH = 80;
   const ctaY = y;
   // 반투명 배경
@@ -790,23 +790,23 @@ function drawTopTitleStyle(ctx,slide,bgImg,brand,category,t){
 
   // 브랜드(좌) / 카테고리(우)
   ctx.font=`500 28px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.42)';
-  ctx.textAlign='left'; ctx.fillText(brand||'',60,70);
-  ctx.textAlign='right'; ctx.fillText(category||'',CW-60,70);
+  ctx.textAlign='left'; ctx.fillText(brand||'',90,100);
+  ctx.textAlign='right'; ctx.fillText(category||'',CW-90,70);
   ctx.textAlign='left';
 
   // 구분선
   ctx.strokeStyle='rgba(0,0,0,0.07)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(60,94); ctx.lineTo(CW-60,94); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(60,94); ctx.lineTo(CW-90,94); ctx.stroke();
 
   // 제목
   let y=180;
-  y=drawTitleBlock(ctx,slide.title,60,y,'#111111',CW-120);
+  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
 
   // 구분선
-  y=drawDivLine(ctx,60,y,160,'rgba(0,0,0,0.10)');
+  y=drawDivLine(ctx,90,y,160,'rgba(0,0,0,0.10)');
 
   // 부제목
-  y=drawSubBlock(ctx,slide.subtitle,60,y,'rgba(30,30,30,0.58)',CW-120);
+  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.58)',CW-180);
 
   // 이미지: 남은 공간
   const imgTop=y+20;
@@ -814,18 +814,18 @@ function drawTopTitleStyle(ctx,slide,bgImg,brand,category,t){
   if(bgImg&&imgH>150){
     ctx.save();
     ctx.beginPath();
-    ctx.roundRect(60,imgTop,CW-120,imgH,16);
+    ctx.roundRect(60,imgTop,CW-180,imgH,16);
     ctx.clip();
-    fitImage(ctx,bgImg,60,imgTop,CW-120,imgH);
+    fitImage(ctx,bgImg,60,imgTop,CW-180,imgH);
     ctx.restore();
   } else if(imgH>0){
-    ctx.fillStyle='#efefef'; ctx.fillRect(60,imgTop,CW-120,Math.max(imgH,150));
+    ctx.fillStyle='#efefef'; ctx.fillRect(60,imgTop,CW-180,Math.max(imgH,150));
   }
 
   // CTA + 태그
-  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,CH-160,CW-120); }
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,CH-160,CW-180); }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',60,CH-30);
+  ctx.fillText(slide.tag||'',90,CH-30);
 }
 
 // ══════════════════════════════════════
@@ -840,7 +840,7 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.9)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-60,72); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,72); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 흰 박스: 하단 고정, 높이는 넉넉하게
   const boxY=CH*0.52;
@@ -855,13 +855,13 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
 
   // 텍스트: 헬퍼 사용으로 절대 겹치지 않음
   let y=boxY+52;
-  y=drawPill(ctx,category,60,y,false);
-  y=drawTitleBlock(ctx,slide.title,60,y,'#111111',CW-120);
-  y=drawDivLine(ctx,60,y,CW-120,'rgba(0,0,0,0.08)');
-  y=drawSubBlock(ctx,slide.subtitle,60,y,'rgba(30,30,30,0.58)',CW-120);
-  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,y,CW-120); y+=90+28; }
+  y=drawPill(ctx,category,90,y,false);
+  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
+  y=drawDivLine(ctx,90,y,CW-180,'rgba(0,0,0,0.08)');
+  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.58)',CW-180);
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',60,y+16);
+  ctx.fillText(slide.tag||'',90,y+16);
 }
 
 // ══════════════════════════════════════
@@ -891,17 +891,17 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.92)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=8;
-  ctx.fillText(brand||'',CW-60,68); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,68); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 텍스트: 헬퍼로 순서대로
   let y=imgH+44;
-  y=drawPill(ctx,category,60,y,false);
-  y=drawTitleBlock(ctx,slide.title,60,y,'#111111',CW-120);
-  y=drawDivLine(ctx,60,y,160,'rgba(0,0,0,0.10)');
-  y=drawSubBlock(ctx,slide.subtitle,60,y,'rgba(30,30,30,0.55)',CW-120);
-  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,60,y,CW-120); y+=90+28; }
+  y=drawPill(ctx,category,90,y,false);
+  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
+  y=drawDivLine(ctx,90,y,160,'rgba(0,0,0,0.10)');
+  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.55)',CW-180);
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',60,y+16);
+  ctx.fillText(slide.tag||'',90,y+16);
 }
 
 // ══════════════════════════════════════
@@ -917,7 +917,7 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
 
   // 브랜드 좌상단
   ctx.font=`500 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.65)';
-  ctx.fillText(brand||'',60,72);
+  ctx.fillText(brand||'',90,100);
 
   // 화면 정중앙 배치
   const midX=CW/2; const midY=CH/2;
@@ -949,12 +949,12 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
   // 부제목
   if(slide.subtitle){
     ctx.font=`300 48px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
-    const sLines=wrapText(ctx,slide.subtitle,`300 48px 'Pretendard'`,CW-160).slice(0,2);
+    const sLines=wrapText(ctx,slide.subtitle,`300 48px 'Pretendard'`,CW-180).slice(0,2);
     sLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=62;});
   }
 
   // CTA
-  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,60,CH-200,'center'); ctx.textAlign='left'; }
+  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,90,CH-200,'center'); ctx.textAlign='left'; }
   // 해시태그 (하단 중앙)
   ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='center';
   ctx.fillText(slide.tag||'',midX,CH-40);
@@ -981,8 +981,8 @@ function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
   }
 
   // 세로 바
-  ctx.fillStyle='#111'; ctx.fillRect(60,100,8,CH-180);
-  ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.fillRect(74,100,4,CH-180);
+  ctx.fillStyle='#111'; ctx.fillRect(90,120,8,CH-200);
+  ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.fillRect(104,120,4,CH-200);
 
   // 세로 카테고리 텍스트
   ctx.save();
@@ -1002,20 +1002,20 @@ function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
 
   // 구분선
   ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(110,y); ctx.lineTo(CW-60,y); ctx.stroke(); y+=40;
+  ctx.beginPath(); ctx.moveTo(110,y); ctx.lineTo(CW-90,y); ctx.stroke(); y+=40;
 
   // 제목
-  y=drawTitleBlock(ctx,slide.title,110,y,'#111111',CW-150);
+  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
 
   // 부제목
-  y=drawSubBlock(ctx,slide.subtitle,110,y,'rgba(30,30,30,0.55)',CW-150);
+  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.55)',CW-180);
 
   // CTA
-  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,110,y,CW-170); y+=90+28; }
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
 
   // 태그
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.28)';
-  ctx.fillText(slide.tag||'',110,y+16);
+  ctx.fillText(slide.tag||'',90,y+16);
 }
 
 // ══════════════════════════════════════
@@ -1028,7 +1028,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`500 28px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.40)';
-  ctx.textAlign='left'; ctx.fillText(brand||'',60,52);
+  ctx.textAlign='left'; ctx.fillText(brand||'',90,100);
   ctx.restore();
 
   // 원형 이미지 (상단 고정)
@@ -1065,7 +1065,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`900 88px 'Pretendard'`; ctx.fillStyle='#111';
-  const tLines=wrapText(ctx,slide.title||'',`900 88px 'Pretendard'`,CW-120).slice(0,2);
+  const tLines=wrapText(ctx,slide.title||'',`900 88px 'Pretendard'`,CW-180).slice(0,2);
   tLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=110; });
   ctx.restore();
   y+=12;
@@ -1080,7 +1080,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     ctx.save();
     ctx.textBaseline='top';
     ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.55)';
-    const sLines=wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-160).slice(0,1);
+    const sLines=wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-180).slice(0,1);
     sLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=56; });
     ctx.restore();
     y+=12;
@@ -1088,7 +1088,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
 
   // CTA
   if(slide.cta&&slide.cta.trim()){
-    ctx.textAlign='left'; drawCTADark(ctx,slide,60,y,CW-120); ctx.textAlign='center'; y+=90+28;
+    ctx.textAlign='left'; drawCTADark(ctx,slide,90,y,CW-180); ctx.textAlign='center'; y+=90+28;
   }
 
   // 태그
@@ -1113,7 +1113,7 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.85)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-60,72); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,72); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 중앙 반투명 카드 박스
   const cardPad=70;
@@ -1158,7 +1158,7 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
   }
 
   // CTA
-  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,60,CH-220,'center'); ctx.textAlign='left'; }
+  if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,90,CH-220,'center'); ctx.textAlign='left'; }
   // 태그 (카드 하단)
   ctx.font=`300 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='center';
   ctx.fillText(slide.tag||'',midX,CH-50);
@@ -1188,7 +1188,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.88)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-60,52);
+  ctx.fillText(brand||'',CW-90,52);
   ctx.restore();
   ctx.textAlign='left';
 
@@ -1196,11 +1196,11 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   const pillH = (category&&category.trim()) ? 48+24 : 0;
   const TF = `900 88px 'Pretendard'`;
   ctx.font=TF;
-  const tLines=wrapText(ctx,slide.title||'',TF,CW-120).slice(0,2);
+  const tLines=wrapText(ctx,slide.title||'',TF,CW-180).slice(0,2);
   const titleH = tLines.length*110+12;
   const divH = 3+32;
   ctx.font=`400 42px 'Pretendard'`;
-  const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-120).slice(0,2):[];
+  const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-180).slice(0,2):[];
   const subH = sLines.length ? sLines.length*56+12 : 0;
   const ctaH = (slide.cta&&slide.cta.trim()) ? 90+28 : 0;
   const tagH = 40;
@@ -1211,14 +1211,14 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   let y = CH - totalH;
 
   // pill (curPillStyle 적용)
-  y=drawPill(ctx,category,60,y,true,curPillStyle||'white');
+  y=drawPill(ctx,category,90,y,true,curPillStyle||'white');
 
   // 제목
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=TF; ctx.fillStyle='#fff';
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
-  tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=110; });
+  tLines.forEach(line=>{ ctx.fillText(line,90,y); y+=110; });
   ctx.shadowBlur=0;
   ctx.restore();
   y+=12;
@@ -1228,19 +1228,19 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
     ctx.save();
     ctx.textBaseline='top';
     ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
-    sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=56; });
+    sLines.forEach(line=>{ ctx.fillText(line,90,y); y+=56; });
     ctx.restore();
     y+=12;
   }
 
   // CTA
-  if(slide.cta&&slide.cta.trim()){ drawCTA(ctx,slide,60,y); y+=90+28; }
+  if(slide.cta&&slide.cta.trim()){ drawCTA(ctx,slide,90,y); y+=90+28; }
 
   // 태그
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText(slide.tag||'',60,y);
+  ctx.fillText(slide.tag||'',90,y);
   ctx.restore();
 }
 
