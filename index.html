@@ -576,7 +576,7 @@ function drawBrand(ctx,brand,color){
   ctx.font=`500 32px 'Pretendard'`; ctx.fillStyle=color;
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand,CW-90,72);
+  ctx.fillText(brand,CW-90,100);
   ctx.restore();
 }
 
@@ -791,7 +791,7 @@ function drawTopTitleStyle(ctx,slide,bgImg,brand,category,t){
   // 브랜드(좌) / 카테고리(우)
   ctx.font=`500 28px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.42)';
   ctx.textAlign='left'; ctx.fillText(brand||'',90,100);
-  ctx.textAlign='right'; ctx.fillText(category||'',CW-90,70);
+  ctx.textAlign='right'; ctx.fillText(category||'',CW-90,100);
   ctx.textAlign='left';
 
   // 구분선
@@ -840,7 +840,7 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.9)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-90,72); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,100); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 흰 박스: 하단 고정, 높이는 넉넉하게
   const boxY=CH*0.52;
@@ -891,7 +891,7 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.92)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=8;
-  ctx.fillText(brand||'',CW-90,68); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,100); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 텍스트: 헬퍼로 순서대로
   let y=imgH+44;
@@ -998,7 +998,7 @@ function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
 
   // 브랜드
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.35)';
-  ctx.fillText(brand||'',110,y); y+=40;
+  ctx.fillText(brand||'',90,100); y+=40;
 
   // 구분선
   ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
@@ -1113,7 +1113,7 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.85)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-90,72); ctx.textAlign='left'; ctx.shadowBlur=0;
+  ctx.fillText(brand||'',CW-90,100); ctx.textAlign='left'; ctx.shadowBlur=0;
 
   // 중앙 반투명 카드 박스
   const cardPad=70;
@@ -1188,7 +1188,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`500 30px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.88)';
   ctx.textAlign='right';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
-  ctx.fillText(brand||'',CW-90,52);
+  ctx.fillText(brand||'',CW-90,100);
   ctx.restore();
   ctx.textAlign='left';
 
@@ -1204,7 +1204,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   const subH = sLines.length ? sLines.length*56+12 : 0;
   const ctaH = (slide.cta&&slide.cta.trim()) ? 90+28 : 0;
   const tagH = 40;
-  const PAD = 70;
+  const PAD = 110;
   const totalH = PAD + pillH + titleH + divH + subH + ctaH + tagH + PAD;
 
   // 시작 y = 하단에서 totalH만큼 위
