@@ -666,13 +666,14 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   return canvas;
 }
 
-// ══ 위→아래 레이아웃 헬퍼 ══
-// pill 그리고 y 반환
+// ══ 위→아래 레이아웃 헬퍼 (textBaseline=top 방식) ══
 function drawPill(ctx, text, x, y, dark){
   if(!text||!text.trim()) return y;
+  ctx.save();
+  ctx.textBaseline='top';
   ctx.font=`500 26px 'Pretendard'`;
   const pW=ctx.measureText(text).width+40;
-  const pH=46;
+  const pH=48;
   if(dark){
     ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.globalAlpha=0.92;
     roundRect(ctx,x,y,pW,pH,pH/2); ctx.fill();
@@ -684,40 +685,44 @@ function drawPill(ctx, text, x, y, dark){
     roundRect(ctx,x,y,pW,pH,pH/2); ctx.fill();
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
   }
-  ctx.fillText(text,x+20,y+32);
-  return y+pH+20; // pill 높이 + 간격 반환
+  // 텍스트 세로 중앙: top baseline이므로 (pH-26)/2 오프셋
+  ctx.fillText(text, x+20, y+11);
+  ctx.restore();
+  return y + pH + 24; // pill 바닥 + 간격
 }
 
-// 제목 그리고 y 반환
 function drawTitleBlock(ctx, text, x, y, color, maxW){
   if(!text) return y;
+  ctx.save();
+  ctx.textBaseline='top';
   const font=`900 88px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'#111';
-  ctx.shadowColor='rgba(0,0,0,0.06)'; ctx.shadowBlur=4;
+  ctx.shadowColor='rgba(0,0,0,0.05)'; ctx.shadowBlur=4;
   const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,2);
-  // fillText y는 baseline이므로 첫줄에 ascent(72px) 추가
-  let ty = y + 72;
-  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=104; });
+  let ty=y;
+  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=110; });
   ctx.shadowBlur=0;
-  return ty + 16; // 마지막 줄 아래 여백 포함해서 반환
+  ctx.restore();
+  return ty+12;
 }
 
-// 부제목 그리고 y 반환
 function drawSubBlock(ctx, text, x, y, color, maxW){
   if(!text||!text.trim()) return y;
+  ctx.save();
+  ctx.textBaseline='top';
   const font=`400 42px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
-  const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,1);
-  let ty = y + 36; // ascent 오프셋
-  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=54; });
-  return ty + 8;
+  const lines=wrapText(ctx,text,font,maxW||CW-120).slice(0,2);
+  let ty=y;
+  lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=56; });
+  ctx.restore();
+  return ty+12;
 }
 
-// 구분선 그리고 y 반환
 function drawDivLine(ctx, x, y, len, color){
   ctx.strokeStyle=color||'rgba(0,0,0,0.10)'; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+(len||160),y); ctx.stroke();
-  return y+28;
+  return y+32;
 }
 
 // CTA 공통 렌더링 함수
