@@ -276,22 +276,28 @@ const CW=1080, CH=1350;
 const UNSPLASH_KEY='YOUR_ACCESS_KEY_HERE';
 
 const THEMES=[
-  // 1. 상단 카테고리+큰제목 / 이미지 아래 배치 (미리캔버스 스타일)
-  {id:'top_title',   name:'상단제목',   style:'top_title'},
-  // 2. 이미지 풀블리드 + 하단 텍스트박스 (불투명 박스)
-  {id:'text_box',    name:'텍스트박스', style:'text_box'},
-  // 3. 상단 이미지 50% + 하단 흰배경 텍스트 (잡지 스타일)
-  {id:'split_clean', name:'스플릿',     style:'split_clean'},
-  // 4. 대형 타이포 중앙 + 이미지 블러 배경 (타이포그래피)
-  {id:'typo_center', name:'타이포',     style:'typo_center'},
-  // 5. 왼쪽 세로 컬러바 + 오른쪽 텍스트 (뉴스레터)
-  {id:'sidebar_bar', name:'사이드바',   style:'sidebar_bar'},
-  // 6. 이미지 상단 원형 프레임 + 하단 텍스트 (프로필)
-  {id:'circle_img',  name:'원형프레임', style:'circle_img'},
-  // 7. 풀블리드 이미지 + 중앙 반투명 카드박스
-  {id:'card_overlay',name:'카드오버레이',style:'card_overlay'},
-  // 8. 하단 그라디언트 + 왼쪽 하단 텍스트 (인스타 감성)
-  {id:'insta_dark',  name:'인스타감성', style:'insta_dark'},
+  // 1. 인스타 감성 - 기본 (흰 pill)
+  {id:'insta_dark',      name:'인스타감성',  style:'insta_dark',  pillStyle:'white'},
+  // 2. 인스타 감성 - 민트 pill
+  {id:'insta_mint',      name:'인스타민트',  style:'insta_dark',  pillStyle:'mint'},
+  // 3. 인스타 감성 - 앰버 pill
+  {id:'insta_amber',     name:'인스타앰버',  style:'insta_dark',  pillStyle:'amber'},
+  // 4. 인스타 감성 - 로즈 pill
+  {id:'insta_rose',      name:'인스타로즈',  style:'insta_dark',  pillStyle:'rose'},
+  // 5. 상단 제목
+  {id:'top_title',       name:'상단제목',    style:'top_title',   pillStyle:'dark'},
+  // 6. 텍스트박스
+  {id:'text_box',        name:'텍스트박스',  style:'text_box',    pillStyle:'dark'},
+  // 7. 스플릿
+  {id:'split_clean',     name:'스플릿',      style:'split_clean', pillStyle:'dark'},
+  // 8. 타이포
+  {id:'typo_center',     name:'타이포',      style:'typo_center', pillStyle:'white'},
+  // 9. 사이드바
+  {id:'sidebar_bar',     name:'사이드바',    style:'sidebar_bar', pillStyle:'dark'},
+  // 10. 원형프레임
+  {id:'circle_img',      name:'원형프레임',  style:'circle_img',  pillStyle:'dark'},
+  // 11. 카드오버레이
+  {id:'card_overlay',    name:'카드오버레이',style:'card_overlay',pillStyle:'white'},
 ];
 
 const CUSTOM_TONES={
@@ -317,7 +323,7 @@ const PLAT={
   threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark';
+let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white';
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
 const THEME_PREVIEWS={
@@ -380,6 +386,8 @@ function renderThemeGrid(){
 
 function selTheme(id){
   curTheme=id;
+  const th=THEMES.find(x=>x.id===id);
+  curPillStyle=th?th.pillStyle:'white';
   renderThemeGrid(); setTimeout(updateThemeArrows,100);
   if(slides.length){
     const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
@@ -668,29 +676,36 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   return canvas;
 }
 
+// pill 색상 가져오기
+function getPillColors(style){
+  const map={
+    white: {bg:'rgba(255,255,255,0.18)', border:'rgba(255,255,255,0.40)', text:'#ffffff'},
+    mint:  {bg:'rgba(45,212,191,0.30)',  border:'rgba(45,212,191,0.70)',  text:'#ffffff'},
+    amber: {bg:'rgba(251,191,36,0.30)',  border:'rgba(251,191,36,0.70)',  text:'#ffffff'},
+    rose:  {bg:'rgba(251,113,133,0.30)', border:'rgba(251,113,133,0.70)',text:'#ffffff'},
+    dark:  {bg:'rgba(17,17,17,0.88)',    border:'rgba(17,17,17,0.15)',    text:'#ffffff'},
+  };
+  return map[style]||map['white'];
+}
+
 // ══ 위→아래 레이아웃 헬퍼 (textBaseline=top 방식) ══
-function drawPill(ctx, text, x, y, dark){
+function drawPill(ctx, text, x, y, dark, pillStyleOverride){
   if(!text||!text.trim()) return y;
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`500 26px 'Pretendard'`;
   const pW=ctx.measureText(text).width+40;
   const pH=48;
-  if(dark){
-    ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.globalAlpha=0.92;
-    roundRect(ctx,x,y,pW,pH,pH/2); ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5; ctx.globalAlpha=1;
-    roundRect(ctx,x,y,pW,pH,pH/2); ctx.stroke();
-    ctx.fillStyle='#fff';
-  } else {
-    ctx.fillStyle='#111'; ctx.globalAlpha=0.88;
-    roundRect(ctx,x,y,pW,pH,pH/2); ctx.fill();
-    ctx.globalAlpha=1; ctx.fillStyle='#fff';
-  }
-  // 텍스트 세로 중앙: top baseline이므로 (pH-26)/2 오프셋
+  const ps=pillStyleOverride||(dark?'white':'dark');
+  const pc=getPillColors(ps);
+  ctx.fillStyle=pc.bg; ctx.globalAlpha=0.92;
+  roundRect(ctx,x,y,pW,pH,pH/2); ctx.fill();
+  ctx.strokeStyle=pc.border; ctx.lineWidth=1.5; ctx.globalAlpha=1;
+  roundRect(ctx,x,y,pW,pH,pH/2); ctx.stroke();
+  ctx.fillStyle=pc.text;
   ctx.fillText(text, x+20, y+11);
   ctx.restore();
-  return y + pH + 24; // pill 바닥 + 간격
+  return y + pH + 24;
 }
 
 function drawTitleBlock(ctx, text, x, y, color, maxW){
@@ -1200,21 +1215,8 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   // 시작 y = 하단에서 totalH만큼 위
   let y = CH - totalH;
 
-  // pill
-  if(category&&category.trim()){
-    ctx.save();
-    ctx.textBaseline='top';
-    ctx.font=`500 26px 'Pretendard'`;
-    const pW=ctx.measureText(category).width+40; const pH=48;
-    ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.globalAlpha=0.92;
-    roundRect(ctx,60,y,pW,pH,pH/2); ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5; ctx.globalAlpha=1;
-    roundRect(ctx,60,y,pW,pH,pH/2); ctx.stroke();
-    ctx.fillStyle='#fff';
-    ctx.fillText(category,80,y+11);
-    ctx.restore();
-    y += pH + 24;
-  }
+  // pill (curPillStyle 적용)
+  y=drawPill(ctx,category,60,y,true,curPillStyle||'white');
 
   // 제목
   ctx.save();
@@ -1226,16 +1228,11 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.restore();
   y+=12;
 
-  // 구분선
-  ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=3;
-  ctx.beginPath(); ctx.moveTo(60,y); ctx.lineTo(160,y); ctx.stroke();
-  y+=32;
-
-  // 부제목
+  // 부제목 (선 없이)
   if(sLines.length){
     ctx.save();
     ctx.textBaseline='top';
-    ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.82)';
+    ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=56; });
     ctx.restore();
     y+=12;
@@ -1269,7 +1266,7 @@ function drawCard(slide,idx,total,bgImg,brand,category){
     circle_img:   ()=>drawCircleImgStyle(ctx,slide,bgImg,brand,category,t),
     card_overlay: ()=>drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t),
     insta_dark:   ()=>drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t),
-  }[t.style];
+  }[t.style||'insta_dark'];
   if(fn) fn(); else drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t);
   return canvas;
 }
