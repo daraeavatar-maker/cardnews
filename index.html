@@ -1112,16 +1112,16 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
 // ══════════════════════════════════════
 function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   if(bgImg){fitImage(ctx,bgImg,0,0,CW,CH);}
-  else{
-    // 이미지 없을 때 테마별 배경색
-    const bgMap={insta_dark:'#1a1a1a',insta_mint:'#0a1f1f',insta_amber:'#1a1000',insta_rose:'#1f0810'};
-    ctx.fillStyle=bgMap[t.id]||'#1a1a1a'; ctx.fillRect(0,0,CW,CH);
-  }
+  else{ctx.fillStyle='#111111'; ctx.fillRect(0,0,CW,CH);}
 
-  const grad=ctx.createLinearGradient(0,CH*0.28,0,CH);
-  grad.addColorStop(0,'rgba(0,0,0,0)');
-  grad.addColorStop(0.45,'rgba(0,0,0,0.52)');
-  grad.addColorStop(1,'rgba(0,0,0,0.91)');
+  // 하단 어둡고 위로 아주 자연스럽게 투명해지는 그라디언트
+  const grad=ctx.createLinearGradient(0,0,0,CH);
+  grad.addColorStop(0,   'rgba(0,0,0,0)');
+  grad.addColorStop(0.30,'rgba(0,0,0,0)');
+  grad.addColorStop(0.55,'rgba(0,0,0,0.18)');
+  grad.addColorStop(0.72,'rgba(0,0,0,0.48)');
+  grad.addColorStop(0.86,'rgba(0,0,0,0.70)');
+  grad.addColorStop(1.0, 'rgba(0,0,0,0.88)');
   ctx.fillStyle=grad; ctx.fillRect(0,0,CW,CH);
 
   // 브랜드
