@@ -348,7 +348,6 @@ function renderThemeGrid(){
       text_box:     ()=>drawTextBoxStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       split_clean:  ()=>drawSplitCleanStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       typo_center:  ()=>drawTypoCenterStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
-      sidebar_bar:  ()=>drawSidebarBarStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       circle_img:   ()=>drawCircleImgStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       card_overlay: ()=>drawCardOverlayStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       insta_dark:   ()=>drawInstaDarkStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
@@ -959,63 +958,6 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='center';
   ctx.fillText(slide.tag||'',midX,CH-40);
   ctx.textAlign='left';
-}
-
-// ══════════════════════════════════════
-// 스타일 5: 사이드바 바
-// ══════════════════════════════════════
-function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
-  ctx.fillStyle='#fafafa'; ctx.fillRect(0,0,CW,CH);
-
-  // 이미지 우측 상단
-  const imgX=260; const imgY=0; const imgW=CW-imgX; const imgH=CH*0.52;
-  if(bgImg){
-    ctx.save(); ctx.beginPath(); ctx.rect(imgX,imgY,imgW,imgH); ctx.clip();
-    fitImage(ctx,bgImg,imgX,imgY,imgW,imgH*1.8); ctx.restore();
-    const fg=ctx.createLinearGradient(0,imgH*0.55,0,imgH);
-    fg.addColorStop(0,'rgba(250,250,250,0)'); fg.addColorStop(1,'rgba(250,250,250,1)');
-    ctx.fillStyle=fg; ctx.fillRect(imgX,0,imgW,imgH);
-    const fl=ctx.createLinearGradient(imgX,0,imgX+180,0);
-    fl.addColorStop(0,'rgba(250,250,250,1)'); fl.addColorStop(1,'rgba(250,250,250,0)');
-    ctx.fillStyle=fl; ctx.fillRect(imgX,imgY,180,imgH);
-  }
-
-  // 세로 바
-  ctx.fillStyle='#111'; ctx.fillRect(90,120,8,CH-200);
-  ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.fillRect(104,120,4,CH-200);
-
-  // 세로 카테고리 텍스트
-  ctx.save();
-  ctx.translate(42,CH/2);
-  ctx.rotate(-Math.PI/2);
-  ctx.font=`500 24px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.32)';
-  ctx.textAlign='center'; ctx.fillText(category||'',0,0);
-  ctx.restore();
-
-  // 텍스트: 왼쪽 하단
-  let y=CH*0.46;
-  ctx.textAlign='left';
-
-  // 브랜드
-  ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.35)';
-  ctx.fillText(brand||'',90,100); y+=40;
-
-  // 구분선
-  ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(110,y); ctx.lineTo(CW-90,y); ctx.stroke(); y+=40;
-
-  // 제목
-  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
-
-  // 부제목
-  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.55)',CW-180);
-
-  // CTA
-  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
-
-  // 태그
-  ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(0,0,0,0.28)';
-  ctx.fillText(slide.tag||'',90,y+16);
 }
 
 // ══════════════════════════════════════
