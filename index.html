@@ -622,7 +622,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
     ctx.fillStyle=pc.text;
     ctx.fillText(category,78,y+10);
     ctx.restore();
-    y+=pH+13;
+    y+=pH+14;
   }
 
   // 제목
@@ -947,7 +947,7 @@ function drawPill(ctx, text, x, y, dark, pillStyleOverride){
   ctx.fillStyle=pc.text;
   ctx.fillText(text, x+20, y+11);
   ctx.restore();
-  return y + pH + 13;
+  return y + pH + 14;
 }
 
 function drawTitleBlock(ctx, text, x, y, color, maxW){
@@ -1286,7 +1286,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
     ctx.fillText(category,cx,y+11);
     ctx.restore();
-    y += pH + 13; // pill 바닥 + 간격
+    y += pH + 14; // pill 바닥 + 간격
   }
 
   // 제목 (중앙, textBaseline=top)
@@ -1425,7 +1425,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.textAlign='left';
 
   // 텍스트 높이 사전 계산 (위→아래)
-  const pillH = (category&&category.trim()) ? 48+13 : 0;
+  const pillH = (category&&category.trim()) ? 48+14 : 0;
   const TF = titleFontStr(88);
   applyTitleSpacing(ctx,88);
   ctx.font=TF;
