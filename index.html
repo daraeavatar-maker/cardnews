@@ -602,7 +602,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
   applySubSpacing(ctx,38);
   ctx.font=SF;
   const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,SF,W-120).slice(0,1):[];
-  const subH=sLines.length?sLines.length*42+4:0;
+  const subH=sLines.length?sLines.length*42+7:0;
   resetSpacing(ctx);
   const tagH=36;
   const totalH=PAD+pillH+titleH+subH+tagH+PAD;
@@ -622,7 +622,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
     ctx.fillStyle=pc.text;
     ctx.fillText(category,78,y+10);
     ctx.restore();
-    y+=pH+20;
+    y+=pH+11;
   }
 
   // 제목
@@ -633,7 +633,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
   tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=84; });
   ctx.shadowBlur=0; ctx.restore();
-  y+=0;
+  y+=7;
 
   // 부제목
   if(sLines.length){
@@ -642,7 +642,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
     applySubSpacing(ctx,38);
     ctx.font=SF; ctx.fillStyle='rgba(255,255,255,0.78)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=42; });
-    ctx.restore(); y+=8;
+    ctx.restore(); y+=7;
   }
 
   // 태그
@@ -948,7 +948,7 @@ function drawPill(ctx, text, x, y, dark, pillStyleOverride){
   ctx.fillStyle=pc.text;
   ctx.fillText(text, x+20, y+11);
   ctx.restore();
-  return y + pH + 16;
+  return y + pH + 11;
 }
 
 function drawTitleBlock(ctx, text, x, y, color, maxW){
@@ -964,7 +964,7 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=96; });
   ctx.shadowBlur=0;
   ctx.restore();
-  return ty-6;
+  return ty+3;
 }
 
 function drawSubBlock(ctx, text, x, y, color, maxW){
@@ -978,7 +978,7 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=48; });
   ctx.restore();
-  return ty+6;
+  return ty+5;
 }
 
 function drawDivLine(ctx, x, y, len, color){
@@ -1287,7 +1287,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     ctx.globalAlpha=1; ctx.fillStyle='#fff';
     ctx.fillText(category,cx,y+11);
     ctx.restore();
-    y += pH + 28; // pill 바닥 + 간격
+    y += pH + 11; // pill 바닥 + 간격
   }
 
   // 제목 (중앙, textBaseline=top)
@@ -1298,7 +1298,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   const tLines=wrapText(ctx,slide.title||'',titleFontStr(88),CW-180).slice(0,2);
   tLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=96; });
   ctx.restore();
-  y-=8;
+  y+=3;
 
   // 구분선
   ctx.strokeStyle='rgba(0,0,0,0.10)'; ctx.lineWidth=1.5;
@@ -1314,7 +1314,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
     const sLines=wrapText(ctx,slide.subtitle,subFontStr(42),CW-180).slice(0,1);
     sLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=48; });
     ctx.restore();
-    y+=6;
+    y+=5;
   }
 
   // CTA
@@ -1428,17 +1428,17 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.textAlign='left';
 
   // 텍스트 높이 사전 계산 (위→아래)
-  const pillH = (category&&category.trim()) ? 48+16 : 0;
+  const pillH = (category&&category.trim()) ? 48+11 : 0;
   const TF = titleFontStr(88);
   applyTitleSpacing(ctx,88);
   ctx.font=TF;
   const tLines=wrapText(ctx,slide.title||'',TF,CW-180).slice(0,2);
-  const titleH = tLines.length*96-8;
+  const titleH = tLines.length*96+3;
   const divH = 3+32;
   applySubSpacing(ctx,42);
   ctx.font=subFontStr(42);
   const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,subFontStr(42),CW-180).slice(0,2):[];
-  const subH = sLines.length ? sLines.length*48+6 : 0;
+  const subH = sLines.length ? sLines.length*48+5 : 0;
   resetSpacing(ctx);
   const ctaH = (slide.cta&&slide.cta.trim()) ? 90+28 : 0;
   const tagH = 40;
@@ -1460,7 +1460,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=96; });
   ctx.shadowBlur=0;
   ctx.restore();
-  y-=8;
+  y+=3;
 
   // 부제목 (선 없이)
   if(sLines.length){
@@ -1470,7 +1470,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
     ctx.font=subFontStr(42); ctx.fillStyle='rgba(255,255,255,0.72)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=48; });
     ctx.restore();
-    y+=6;
+    y+=5;
   }
 
   // CTA
