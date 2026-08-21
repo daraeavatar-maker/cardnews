@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>카드뉴스 생성기 by Darae</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700;900&family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Gamja+Flower&family=Gaegu:wght@700&family=Cute+Font&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#2c2c32;--surface:#36363c;--surface2:#3e3e46;--border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.16);--text:#f0eff4;--sub:#8b8a96;--muted:#4a4955;--accent:#7c5cbf;--accent-l:rgba(124,92,191,0.15);--accent-b:rgba(124,92,191,0.4);--danger:#e05a5a;--success:#4caf82;--r:12px;--rs:8px;}
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -79,7 +80,7 @@
   .dl-all-btn:hover{background:var(--accent);color:#fff;}
   .cards-grid{display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
   .card-wrap{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:center;}
-  .card-canvas{border-radius:6px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;display:block;}
+  .card-canvas{border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;display:block;}
   .card-canvas:hover{border-color:var(--accent-b);}
   .card-canvas.active{border-color:var(--accent);}
   .card-dl-btn{padding:5px 10px;border:1px solid var(--border-h);border-radius:var(--rs);background:transparent;color:var(--sub);font-family:inherit;font-size:11px;cursor:pointer;width:100%;text-align:center;}
@@ -121,6 +122,9 @@
   #sizeRow{display:flex;}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
+  .font-btn{flex-shrink:0;padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--sub);font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .font-btn:hover{border-color:var(--border-h);color:var(--text);}
+  .font-btn.active{border-color:var(--accent-b);background:var(--accent-l);color:var(--text);}
   @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
   /* 테마 스크롤 래퍼 */
   .theme-wrap{position:relative;}
@@ -169,7 +173,7 @@
 
     <main class="main">
       <div class="page-title">카드뉴스 생성기 by Darae</div>
-      <div class="page-sub">인스타그램 4:5 카드뉴스를 자동으로 만들어드려요.</div>
+      <div class="page-sub">카드뉴스를 자동으로 만들어드려요.</div>
 
       <div class="form-card" id="customPanel" style="display:none">
         <div class="f-lbl" style="margin-bottom:10px">내 계정 정보</div>
@@ -213,18 +217,28 @@
         </div>
         <div class="row-tags" style="margin-top:10px">
           <span class="tag-lbl">플랫폼:</span>
-          <button class="tag-btn active" onclick="selPlat(this,'instagram')">인스타그램</button>
-          <button class="tag-btn" onclick="selPlat(this,'naver_blog')">네이버 블로그</button>
-          <button class="tag-btn" onclick="selPlat(this,'clip')">클립</button>
-          <button class="tag-btn" onclick="selPlat(this,'threads')">스레드</button>
+          <button class="tag-btn active" id="plat-instagram" onclick="selPlat(this,'instagram')">인스타그램</button>
+          <button class="tag-btn" id="plat-naver" onclick="selPlat(this,'naver_blog')">네이버 블로그</button>
         </div>
-        <div class="row-tags" style="margin-top:8px" id="sizeRow" style="display:none">
+        <div class="row-tags" style="margin-top:6px">
           <span class="tag-lbl">사이즈:</span>
-          <button class="tag-btn active" id="size45" onclick="selSize(this,'4:5')">4:5 인스타 (1080×1350)</button>
-          <button class="tag-btn" id="size11" onclick="selSize(this,'1:1')">1:1 정사각형 (1080×1080)</button>
+          <span id="sizeLabel" style="font-size:12px;color:var(--sub);padding:4px 10px;background:var(--surface2);border-radius:20px;">4:5 인스타 (1080×1350)</span>
         </div>
       </div>
 
+      <div class="form-card" style="margin-bottom:8px">
+        <div class="f-lbl" style="margin-bottom:10px">글씨체</div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none">
+          <button class="font-btn active" onclick="selFont(this,'Pretendard')" style="font-family:'Pretendard'">Aa 프리텐다드</button>
+          <button class="font-btn" onclick="selFont(this,'Noto Sans KR')" style="font-family:'Noto Sans KR'">Aa 노토산스</button>
+          <button class="font-btn" onclick="selFont(this,'Noto Serif KR')" style="font-family:'Noto Serif KR'">Aa 노토세리프</button>
+          <button class="font-btn" onclick="selFont(this,'Black Han Sans')" style="font-family:'Black Han Sans'">Aa 블랙한산스</button>
+          <button class="font-btn" onclick="selFont(this,'Do Hyeon')" style="font-family:'Do Hyeon'">Aa 도현</button>
+          <button class="font-btn" onclick="selFont(this,'Jua')" style="font-family:'Jua'">Aa 주아</button>
+          <button class="font-btn" onclick="selFont(this,'Gaegu')" style="font-family:'Gaegu'">Aa 개구</button>
+          <button class="font-btn" onclick="selFont(this,'Gamja Flower')" style="font-family:'Gamja Flower'">Aa 감자꽃</button>
+        </div>
+      </div>
       <div class="form-card">
         <div class="f-lbl" style="margin-bottom:10px">디자인 테마</div>
         <div class="theme-wrap">
@@ -319,7 +333,7 @@ const PLAT={
   threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5';
+let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5', curFont='Pretendard';
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
 const THEME_PREVIEWS={
@@ -412,16 +426,27 @@ function selAcct(id){
 
 function selPlat(el,id){
   curPlat=id;
-  // 플랫폼 버튼만 active (size 버튼 제외)
-  document.querySelectorAll('.row-tags:first-of-type .tag-btn, .row-tags .tag-btn:not(#size45):not(#size11)').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  // 네이버블로그면 사이즈 선택 표시
-  const sizeRow=document.getElementById('sizeRow');
   if(id==='naver_blog'){
-    sizeRow.style.display='flex';
+    curSize='1:1';
+    document.getElementById('sizeLabel').textContent='1:1 정사각형 (1080×1080)';
   } else {
-    sizeRow.style.display='none';
-    selSize(document.getElementById('size45'),'4:5');
+    curSize='4:5';
+    document.getElementById('sizeLabel').textContent='4:5 인스타 (1080×1350)';
+  }
+}
+
+function selFont(el, font){
+  curFont = font;
+  document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // 이미 생성된 카드가 있으면 재렌더링
+  if(slides.length){
+    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+    canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
+    renderCards(); renderDetail();
   }
 }
 
@@ -846,7 +871,7 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   const font=`900 88px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'#111';
   ctx.shadowColor='rgba(0,0,0,0.05)'; ctx.shadowBlur=4;
-  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,`900 88px '${curFont}'`,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=110; });
   ctx.shadowBlur=0;
@@ -860,7 +885,7 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   ctx.textBaseline='top';
   const font=`400 42px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
-  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,`900 88px '${curFont}'`,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=56; });
   ctx.restore();
@@ -1299,7 +1324,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   // 제목
   ctx.save();
   ctx.textBaseline='top';
-  ctx.font=TF; ctx.fillStyle='#fff';
+  ctx.font=`900 88px '${curFont}'`; ctx.fillStyle='#fff';
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
   tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=110; });
   ctx.shadowBlur=0;
@@ -1310,7 +1335,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   if(sLines.length){
     ctx.save();
     ctx.textBaseline='top';
-    ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
+    ctx.font=`400 42px '${curFont}'`; ctx.fillStyle='rgba(255,255,255,0.72)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=56; });
     ctx.restore();
     y+=12;
@@ -1354,10 +1379,21 @@ function renderCards(){
   grid.innerHTML='';
   canvases.forEach((c,i)=>{
     const prev=document.createElement('canvas');
-    prev.width=c.width; prev.height=c.height;
-    prev.getContext('2d').drawImage(c,0,0);
-    prev.style.width='108px'; prev.style.height='135px';
-    prev.style.borderRadius='6px';
+    const isSquare2=(curPlat==='naver_blog'&&curSize==='1:1');
+    if(isSquare2){
+      // 1:1 미리보기 캔버스 새로 생성
+      const slide=slides[i];
+      const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+      const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+      prev.width=1080; prev.height=1080;
+      drawSquareCard(prev.getContext('2d'),slide,bgImgs[i],brand,category);
+    } else {
+      prev.width=c.width; prev.height=c.height;
+      prev.getContext('2d').drawImage(c,0,0);
+    }
+    const isSquare=(curPlat==='naver_blog'&&curSize==='1:1');
+    prev.style.width='200px'; prev.style.height=isSquare?'200px':'250px';
+    prev.style.borderRadius='8px'; prev.style.objectFit='cover';
     prev.className='card-canvas'+(i===selIdx?' active':'');
     prev.addEventListener('click',()=>selectCard(i));
     prev.addEventListener('dblclick',()=>openModalCard(i));
