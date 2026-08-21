@@ -254,10 +254,20 @@
           <button class="font-btn" onclick="selFont(this,'Gaegu')" style="font-family:'Gaegu'">개구</button>
           <button class="font-btn" onclick="selFont(this,'Gamja Flower')" style="font-family:'Gamja Flower'">감자꽃</button>
         </div>
-        <div class="cards-wrap">
-          <button class="cards-arrow left" id="cardsArrowL" onclick="scrollCards(-1)">‹</button>
-          <div class="cards-grid" id="cardsGrid"></div>
-          <button class="cards-arrow right" id="cardsArrowR" onclick="scrollCards(1)">›</button>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <!-- 좌: 큰 미리보기 -->
+          <div style="flex-shrink:0">
+            <canvas id="bigPreview" style="width:380px;border-radius:12px;display:block;border:1px solid var(--border);cursor:pointer" onclick="openModalCard(selIdx)"></canvas>
+            <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">클릭하면 더 크게 보여요</div>
+          </div>
+          <!-- 우: 썸네일 목록 -->
+          <div style="flex:1;min-width:200px">
+            <div class="cards-wrap">
+              <button class="cards-arrow left" id="cardsArrowL" onclick="scrollCards(-1)">‹</button>
+              <div class="cards-grid" id="cardsGrid"></div>
+              <button class="cards-arrow right" id="cardsArrowR" onclick="scrollCards(1)">›</button>
+            </div>
+          </div>
         </div>
         <div class="edit-panel" id="editPanel">
           <div class="edit-header">
@@ -451,21 +461,28 @@ async function selFont(el, font){
   curFont = font;
   document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  // 폰트 완전 로드 대기 (모든 굵기)
+  // 실제 카드에 들어갈 모든 텍스트로 폰트 로드 (한글 subset 대응)
   try{
+    let allText='카드뉴스 생성기 by Darae 0123456789';
+    slides.forEach(s=>{ allText+=(s.title||'')+(s.subtitle||'')+(s.tag||''); });
+    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand||'';
+    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category||'';
+    allText+=brand+category;
     await Promise.all([
-      document.fonts.load(`400 88px '${font}'`, '한글테스트가나다'),
-      document.fonts.load(`700 88px '${font}'`, '한글테스트가나다'),
-      document.fonts.load(`900 88px '${font}'`, '한글테스트가나다'),
+      document.fonts.load(`400 88px '${font}'`, allText),
+      document.fonts.load(`700 88px '${font}'`, allText),
+      document.fonts.load(`900 88px '${font}'`, allText),
     ]);
     await document.fonts.ready;
+    // 로드 후 짧게 대기 (렌더링 안정화)
+    await new Promise(r=>setTimeout(r,100));
   }catch(e){}
-  // 이미 생성된 카드가 있으면 재렌더링
   if(slides.length){
     const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
     const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
     canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
     renderCards(); renderDetail();
+    showToast(`${font} 적용됐어요!`);
   }
 }
 
@@ -588,7 +605,7 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`300 24px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText(slide.tag||'',60,y);
+  ctx.fillText(trimTags(slide.tag),60,y);
   ctx.restore();
 }
 
@@ -857,6 +874,12 @@ function drawCard(slide,idx,total,bgImg,brand,category){
   return canvas;
 }
 
+// 해시태그 3개로 제한
+function trimTags(t){
+  if(!t) return '';
+  return t.split(' ').filter(x=>x.startsWith('#')).slice(0,3).join(' ');
+}
+
 // pill 색상 가져오기
 function getPillColors(style){
   const map={
@@ -1015,7 +1038,7 @@ function drawTopTitleStyle(ctx,slide,bgImg,brand,category,t){
   // CTA + 태그
   if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,CH-160,CW-180); }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',90,CH-30);
+  ctx.fillText(trimTags(slide.tag),90,CH-30);
 }
 
 // ══════════════════════════════════════
@@ -1051,7 +1074,7 @@ function drawTextBoxStyle(ctx,slide,bgImg,brand,category,t){
   y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.58)',CW-180);
   if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',90,y+16);
+  ctx.fillText(trimTags(slide.tag),90,y+16);
 }
 
 // ══════════════════════════════════════
@@ -1091,7 +1114,7 @@ function drawSplitCleanStyle(ctx,slide,bgImg,brand,category,t){
   y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.55)',CW-180);
   if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
-  ctx.fillText(slide.tag||'',90,y+16);
+  ctx.fillText(trimTags(slide.tag),90,y+16);
 }
 
 // ══════════════════════════════════════
@@ -1147,7 +1170,7 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
   if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,90,CH-200,'center'); ctx.textAlign='left'; }
   // 해시태그 (하단 중앙)
   ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='center';
-  ctx.fillText(slide.tag||'',midX,CH-40);
+  ctx.fillText(trimTags(slide.tag),midX,CH-40);
   ctx.textAlign='left';
 }
 
@@ -1228,7 +1251,7 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.30)';
-  ctx.fillText(slide.tag||'',cx,y);
+  ctx.fillText(trimTags(slide.tag),cx,y);
   ctx.restore();
   ctx.textAlign='left';
 }
@@ -1294,7 +1317,7 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
   if(slide.cta&&slide.cta.trim()){ ctx.textAlign='left'; drawCTA(ctx,slide,90,CH-220,'center'); ctx.textAlign='left'; }
   // 태그 (카드 하단)
   ctx.font=`300 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='center';
-  ctx.fillText(slide.tag||'',midX,CH-50);
+  ctx.fillText(trimTags(slide.tag),midX,CH-50);
   ctx.textAlign='left';
 }
 
@@ -1373,7 +1396,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.save();
   ctx.textBaseline='top';
   ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText(slide.tag||'',60,y);
+  ctx.fillText(trimTags(slide.tag),60,y);
   ctx.restore();
 }
 
@@ -1417,7 +1440,7 @@ function renderCards(){
       prev.getContext('2d').drawImage(c,0,0);
     }
     const isSquare=(curPlat==='naver_blog'&&curSize==='1:1');
-    prev.style.width='280px'; prev.style.height=isSquare?'280px':'350px';
+    prev.style.width='120px'; prev.style.height=isSquare?'120px':'150px';
     prev.style.borderRadius='8px'; prev.style.objectFit='cover';
     prev.className='card-canvas'+(i===selIdx?' active':'');
     prev.addEventListener('click',()=>selectCard(i));
@@ -1437,12 +1460,34 @@ function renderCards(){
     wrap.appendChild(viewBtn);
     grid.appendChild(wrap);
   });
+  updateBigPreview();
 }
 
 function selectCard(i){
   selIdx=i;
   document.querySelectorAll('.card-canvas').forEach((c,idx)=>c.classList.toggle('active',idx===i));
   renderDetail();
+  updateBigPreview();
+}
+
+function updateBigPreview(){
+  const big=document.getElementById('bigPreview');
+  if(!big||!canvases.length) return;
+  const isSq=(curPlat==='naver_blog'&&curSize==='1:1');
+  if(isSq){
+    // 1:1 미리보기
+    const slide=slides[selIdx];
+    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+    big.width=1080; big.height=1080;
+    drawSquareCard(big.getContext('2d'),slide,bgImgs[selIdx],brand,category);
+    big.style.height='380px';
+  } else {
+    const src=canvases[selIdx];
+    big.width=src.width; big.height=src.height;
+    big.getContext('2d').drawImage(src,0,0);
+    big.style.height='475px';
+  }
 }
 function openModalCard(i){
   openModalFromCanvas(canvases[i]);
