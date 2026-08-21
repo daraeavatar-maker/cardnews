@@ -1417,14 +1417,15 @@ function renderCards(){
       prev.getContext('2d').drawImage(c,0,0);
     }
     const isSquare=(curPlat==='naver_blog'&&curSize==='1:1');
-    prev.style.width='200px'; prev.style.height=isSquare?'200px':'250px';
+    prev.style.width='280px'; prev.style.height=isSquare?'280px':'350px';
     prev.style.borderRadius='8px'; prev.style.objectFit='cover';
     prev.className='card-canvas'+(i===selIdx?' active':'');
     prev.addEventListener('click',()=>selectCard(i));
     prev.addEventListener('dblclick',()=>openModalCard(i));
+    const isSq=(curPlat==='naver_blog'&&curSize==='1:1');
     const dlBtn=document.createElement('button');
     dlBtn.className='card-dl-btn'; dlBtn.textContent=`${slides[i].num}번 저장`;
-    dlBtn.addEventListener('click',()=>downloadCard(i));
+    dlBtn.addEventListener('click',()=>isSq?downloadSquare(i):downloadCard(i));
     const viewBtn=document.createElement('button');
     viewBtn.className='card-dl-btn';
     viewBtn.textContent='🔍 크게';
@@ -1433,15 +1434,6 @@ function renderCards(){
     const wrap=document.createElement('div'); wrap.className='card-wrap';
     wrap.appendChild(prev);
     wrap.appendChild(dlBtn);
-    // 네이버블로그 1:1 선택시 정사각형 다운로드 버튼 추가
-    if(curPlat==='naver_blog'&&curSize==='1:1'){
-      const sqBtn=document.createElement('button');
-      sqBtn.className='card-dl-btn';
-      sqBtn.textContent='⬜ 1:1 저장';
-      sqBtn.style.marginTop='2px';
-      sqBtn.addEventListener('click',()=>downloadSquare(i));
-      wrap.appendChild(sqBtn);
-    }
     wrap.appendChild(viewBtn);
     grid.appendChild(wrap);
   });
