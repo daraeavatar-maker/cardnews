@@ -122,7 +122,7 @@
   #sizeRow{display:flex;}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
-  .font-btn{flex-shrink:0;padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--sub);font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .font-btn{flex-shrink:0;padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--sub);font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
   .font-btn:hover{border-color:var(--border-h);color:var(--text);}
   .font-btn.active{border-color:var(--accent-b);background:var(--accent-l);color:var(--text);}
   @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
@@ -226,19 +226,6 @@
         </div>
       </div>
 
-      <div class="form-card" style="margin-bottom:8px">
-        <div class="f-lbl" style="margin-bottom:10px">글씨체</div>
-        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none">
-          <button class="font-btn active" onclick="selFont(this,'Pretendard')" style="font-family:'Pretendard'">Aa 프리텐다드</button>
-          <button class="font-btn" onclick="selFont(this,'Noto Sans KR')" style="font-family:'Noto Sans KR'">Aa 노토산스</button>
-          <button class="font-btn" onclick="selFont(this,'Noto Serif KR')" style="font-family:'Noto Serif KR'">Aa 노토세리프</button>
-          <button class="font-btn" onclick="selFont(this,'Black Han Sans')" style="font-family:'Black Han Sans'">Aa 블랙한산스</button>
-          <button class="font-btn" onclick="selFont(this,'Do Hyeon')" style="font-family:'Do Hyeon'">Aa 도현</button>
-          <button class="font-btn" onclick="selFont(this,'Jua')" style="font-family:'Jua'">Aa 주아</button>
-          <button class="font-btn" onclick="selFont(this,'Gaegu')" style="font-family:'Gaegu'">Aa 개구</button>
-          <button class="font-btn" onclick="selFont(this,'Gamja Flower')" style="font-family:'Gamja Flower'">Aa 감자꽃</button>
-        </div>
-      </div>
       <div class="form-card">
         <div class="f-lbl" style="margin-bottom:10px">디자인 테마</div>
         <div class="theme-wrap">
@@ -255,6 +242,17 @@
         <div class="sec-hd">
           <span class="sec-title" id="prevLabel">카드 이미지</span>
           <button class="dl-all-btn" onclick="downloadAll()">전체 다운로드</button>
+        </div>
+        <div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;align-items:center">
+          <span style="font-size:11px;color:var(--muted);flex-shrink:0;margin-right:2px">글씨체:</span>
+          <button class="font-btn active" onclick="selFont(this,'Pretendard')" style="font-family:'Pretendard'">프리텐다드</button>
+          <button class="font-btn" onclick="selFont(this,'Noto Sans KR')" style="font-family:'Noto Sans KR'">노토산스</button>
+          <button class="font-btn" onclick="selFont(this,'Noto Serif KR')" style="font-family:'Noto Serif KR'">노토세리프</button>
+          <button class="font-btn" onclick="selFont(this,'Black Han Sans')" style="font-family:'Black Han Sans'">블랙한산스</button>
+          <button class="font-btn" onclick="selFont(this,'Do Hyeon')" style="font-family:'Do Hyeon'">도현</button>
+          <button class="font-btn" onclick="selFont(this,'Jua')" style="font-family:'Jua'">주아</button>
+          <button class="font-btn" onclick="selFont(this,'Gaegu')" style="font-family:'Gaegu'">개구</button>
+          <button class="font-btn" onclick="selFont(this,'Gamja Flower')" style="font-family:'Gamja Flower'">감자꽃</button>
         </div>
         <div class="cards-wrap">
           <button class="cards-arrow left" id="cardsArrowL" onclick="scrollCards(-1)">‹</button>
@@ -327,13 +325,25 @@ const ACCOUNTS={
 };
 
 const PLAT={
-  instagram:{name:'인스타그램',prompt:'플랫폼: 인스타그램\n알고리즘 핵심: 저장률과 공유율이 도달률을 결정.\n전략:\n- 1번: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹\n- 중간: 실제로 유용하거나 깊은 통찰\n- 마지막: 저장·공유 직접 유도\n해시태그: 대중 1개 + 중간 1개 + 계정특화 1개'},
+  instagram:{name:'인스타그램',prompt:'플랫폼: 인스타그램\n알고리즘 핵심: 저장률과 공유율이 도달률을 결정.\n전략:\n- 1번: "나중에 써먹어야지" 또는 "이거 맞아"를 유발하는 강한 후킹\n- 중간: 실제로 유용하거나 깊은 통찰\n- 마지막: 저장·공유 직접 유도\n해시태그: 대중 1개 + 중간 1개 + 계정특화 1개, 총 3개만. 절대 3개 초과 금지.'},
   naver_blog:{name:'네이버 블로그',prompt:'플랫폼: 네이버 블로그\n알고리즘 핵심: 검색 키워드 노출 + 체류시간.\n전략:\n- 1번: 검색 키워드 자연스럽게 포함\n- 중간: 정보성 강조, 수치/예시 포함\n- 마지막: 댓글·구독 유도'},
   clip:{name:'클립',prompt:'플랫폼: 네이버 클립\n알고리즘 핵심: 첫 1초 이탈률.\n전략:\n- 1번: 0.5초 안에 멈추게 하는 강렬한 후킹\n- 중간: 빠른 템포\n- 마지막: 강한 반전 or 핵심 요약'},
   threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
 let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5', curFont='Pretendard';
+// 폰트별 사용 가능 굵기 (없는 굵기 쓰면 fallback 폰트로 렌더링됨)
+const FONT_WEIGHTS={
+  'Pretendard':{title:900,sub:400},
+  'Noto Sans KR':{title:900,sub:400},
+  'Noto Serif KR':{title:900,sub:400},
+  'Black Han Sans':{title:400,sub:400},
+  'Do Hyeon':{title:400,sub:400},
+  'Jua':{title:400,sub:400},
+  'Gaegu':{title:700,sub:700},
+  'Gamja Flower':{title:400,sub:400},
+};
+function fw(){ return FONT_WEIGHTS[curFont]||{title:900,sub:400}; }
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
 const THEME_PREVIEWS={
@@ -437,10 +447,19 @@ function selPlat(el,id){
   }
 }
 
-function selFont(el, font){
+async function selFont(el, font){
   curFont = font;
   document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
+  // 폰트 완전 로드 대기 (모든 굵기)
+  try{
+    await Promise.all([
+      document.fonts.load(`400 88px '${font}'`, '한글테스트가나다'),
+      document.fonts.load(`700 88px '${font}'`, '한글테스트가나다'),
+      document.fonts.load(`900 88px '${font}'`, '한글테스트가나다'),
+    ]);
+    await document.fonts.ready;
+  }catch(e){}
   // 이미 생성된 카드가 있으면 재렌더링
   if(slides.length){
     const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
@@ -685,6 +704,12 @@ ${p.prompt}
     slides=JSON.parse(raw.replace(/```json|```/g,'').trim()).slides;
 
     document.getElementById('loadingMsg').textContent='배경 이미지 불러오는 중...';
+    try{
+      await Promise.all([
+        document.fonts.load(`${fw().title} 88px '${curFont}'`, '한글테스트가나다'),
+        document.fonts.load(`${fw().sub} 42px '${curFont}'`, '한글테스트가나다'),
+      ]);
+    }catch(e){}
     await document.fonts.ready;
     const urls=await Promise.all(slides.map(sl=>fetchImg(sl.imgQuery||a.unsplash)));
     bgImgs=await Promise.all(urls.map(u=>loadImg(u)));
@@ -871,7 +896,7 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   const font=`900 88px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'#111';
   ctx.shadowColor='rgba(0,0,0,0.05)'; ctx.shadowBlur=4;
-  const lines=wrapText(ctx,text,`900 88px '${curFont}'`,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,`${fw().title} 88px '${curFont}'`,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=110; });
   ctx.shadowBlur=0;
@@ -885,7 +910,7 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   ctx.textBaseline='top';
   const font=`400 42px 'Pretendard'`;
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
-  const lines=wrapText(ctx,text,`900 88px '${curFont}'`,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,`${fw().title} 88px '${curFont}'`,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=56; });
   ctx.restore();
@@ -1324,7 +1349,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   // 제목
   ctx.save();
   ctx.textBaseline='top';
-  ctx.font=`900 88px '${curFont}'`; ctx.fillStyle='#fff';
+  ctx.font=`${fw().title} 88px '${curFont}'`; ctx.fillStyle='#fff';
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
   tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=110; });
   ctx.shadowBlur=0;
@@ -1335,7 +1360,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   if(sLines.length){
     ctx.save();
     ctx.textBaseline='top';
-    ctx.font=`400 42px '${curFont}'`; ctx.fillStyle='rgba(255,255,255,0.72)';
+    ctx.font=`${fw().sub} 42px '${curFont}'`; ctx.fillStyle='rgba(255,255,255,0.72)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=56; });
     ctx.restore();
     y+=12;
