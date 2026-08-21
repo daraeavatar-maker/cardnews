@@ -243,16 +243,13 @@
           <span class="sec-title" id="prevLabel">카드 이미지</span>
           <button class="dl-all-btn" onclick="downloadAll()">전체 다운로드</button>
         </div>
-        <div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;align-items:center">
-          <span style="font-size:11px;color:var(--muted);flex-shrink:0;margin-right:2px">글씨체:</span>
-          <button class="font-btn active" onclick="selFont(this,'Pretendard')" style="font-family:'Pretendard'">프리텐다드</button>
-          <button class="font-btn" onclick="selFont(this,'Noto Sans KR')" style="font-family:'Noto Sans KR'">노토산스</button>
-          <button class="font-btn" onclick="selFont(this,'Noto Serif KR')" style="font-family:'Noto Serif KR'">노토세리프</button>
-          <button class="font-btn" onclick="selFont(this,'Black Han Sans')" style="font-family:'Black Han Sans'">블랙한산스</button>
-          <button class="font-btn" onclick="selFont(this,'Do Hyeon')" style="font-family:'Do Hyeon'">도현</button>
-          <button class="font-btn" onclick="selFont(this,'Jua')" style="font-family:'Jua'">주아</button>
-          <button class="font-btn" onclick="selFont(this,'Gaegu')" style="font-family:'Gaegu'">개구</button>
-          <button class="font-btn" onclick="selFont(this,'Gamja Flower')" style="font-family:'Gamja Flower'">감자꽃</button>
+        <div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none;align-items:center" id="titleFontScroll">
+          <span style="font-size:11px;color:var(--muted);flex-shrink:0;margin-right:2px;min-width:80px">제목 글씨체:</span>
+          <div id="titleFontRow" style="display:flex;gap:6px"></div>
+        </div>
+        <div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;align-items:center" id="subFontScroll">
+          <span style="font-size:11px;color:var(--muted);flex-shrink:0;margin-right:2px;min-width:80px">부제목 글씨체:</span>
+          <div id="subFontRow" style="display:flex;gap:6px"></div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
           <!-- 좌: 큰 미리보기 -->
@@ -341,19 +338,85 @@ const PLAT={
   threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5', curFont='Pretendard';
-// 폰트별 사용 가능 굵기 (없는 굵기 쓰면 fallback 폰트로 렌더링됨)
-const FONT_WEIGHTS={
-  'Pretendard':{title:900,sub:400},
-  'Noto Sans KR':{title:900,sub:400},
-  'Noto Serif KR':{title:900,sub:400},
-  'Black Han Sans':{title:400,sub:400},
-  'Do Hyeon':{title:400,sub:400},
-  'Jua':{title:400,sub:400},
-  'Gaegu':{title:700,sub:700},
-  'Gamja Flower':{title:400,sub:400},
-};
-function fw(){ return FONT_WEIGHTS[curFont]||{title:900,sub:400}; }
+let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5';
+let curTitleFontId='pt900', curSubFontId='pt400';
+// ── 글씨체 옵션 (제목/부제목 개별 선택, 프리텐다드는 굵기별) ──
+const FONT_OPTIONS=[
+  {id:'pt900',label:'프리텐다드 블랙',family:'Pretendard',w:900},
+  {id:'pt800',label:'프리텐다드 엑스트라볼드',family:'Pretendard',w:800},
+  {id:'pt700',label:'프리텐다드 볼드',family:'Pretendard',w:700},
+  {id:'pt600',label:'프리텐다드 세미볼드',family:'Pretendard',w:600},
+  {id:'pt500',label:'프리텐다드 미디엄',family:'Pretendard',w:500},
+  {id:'pt400',label:'프리텐다드 레귤러',family:'Pretendard',w:400},
+  {id:'pt300',label:'프리텐다드 라이트',family:'Pretendard',w:300},
+  {id:'noto',label:'노토산스',family:'Noto Sans KR',w:null},
+  {id:'notoserif',label:'노토세리프',family:'Noto Serif KR',w:null},
+  {id:'blackhan',label:'블랙한산스',family:'Black Han Sans',w:400},
+  {id:'dohyeon',label:'도현',family:'Do Hyeon',w:400},
+  {id:'jua',label:'주아',family:'Jua',w:400},
+  {id:'gaegu',label:'개구',family:'Gaegu',w:700},
+  {id:'gamja',label:'감자꽃',family:'Gamja Flower',w:400},
+];
+function fontOf(id){return FONT_OPTIONS.find(f=>f.id===id)||FONT_OPTIONS[0];}
+function titleFontStr(size){const f=fontOf(curTitleFontId);return `${f.w??900} ${size}px '${f.family}'`;}
+function subFontStr(size){const f=fontOf(curSubFontId);return `${f.w??400} ${size}px '${f.family}'`;}
+function fw(){return {title:(fontOf(curTitleFontId).w??900), sub:(fontOf(curSubFontId).w??400)};}
+
+function renderFontRows(){
+  const mk=(rowId,role,curId)=>{
+    const row=document.getElementById(rowId);
+    if(!row) return;
+    row.innerHTML='';
+    FONT_OPTIONS.forEach(f=>{
+      const b=document.createElement('button');
+      b.className='font-btn'+(f.id===curId?' active':'');
+      b.textContent=f.label;
+      b.style.fontFamily=`'${f.family}'`;
+      if(f.family==='Pretendard') b.style.fontWeight=f.w;
+      b.onclick=()=>selCardFont(role,f.id,b);
+      row.appendChild(b);
+    });
+  };
+  mk('titleFontRow','title',curTitleFontId);
+  mk('subFontRow','sub',curSubFontId);
+}
+
+async function loadCardFonts(){
+  try{
+    let allText='카드뉴스 생성기 by Darae 0123456789';
+    slides.forEach(s=>{allText+=(s.title||'')+(s.subtitle||'')+(s.tag||'')+(s.cta||'');});
+    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand||'';
+    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category||'';
+    allText+=brand+category;
+    const tf=fontOf(curTitleFontId), sf=fontOf(curSubFontId);
+    await Promise.all([
+      document.fonts.load(`${tf.w??900} 88px '${tf.family}'`, allText),
+      document.fonts.load(`${sf.w??400} 42px '${sf.family}'`, allText),
+    ]);
+    await document.fonts.ready;
+    await new Promise(r=>setTimeout(r,80));
+  }catch(e){}
+}
+
+function rerenderAllCards(){
+  if(!slides.length) return;
+  const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+  const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+  canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
+  renderCards(); renderDetail();
+}
+
+async function selCardFont(role,id,btn){
+  if(role==='title') curTitleFontId=id; else curSubFontId=id;
+  const rowId=role==='title'?'titleFontRow':'subFontRow';
+  document.querySelectorAll('#'+rowId+' .font-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  await loadCardFonts();
+  if(slides.length){
+    rerenderAllCards();
+    showToast(`${role==='title'?'제목':'부제목'}: ${fontOf(id).label} 적용됐어요!`);
+  }
+}
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
 const THEME_PREVIEWS={
@@ -389,6 +452,7 @@ function renderThemeGrid(){
       text_box:     ()=>drawTextBoxStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       split_clean:  ()=>drawSplitCleanStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       typo_center:  ()=>drawTypoCenterStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
+      sidebar_bar:  ()=>drawSidebarBarStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       circle_img:   ()=>drawCircleImgStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       card_overlay: ()=>drawCardOverlayStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
       insta_dark:   ()=>drawInstaDarkStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t),
@@ -454,35 +518,6 @@ function selPlat(el,id){
   } else {
     curSize='4:5';
     document.getElementById('sizeLabel').textContent='4:5 직사각형 (1080×1350)';
-  }
-}
-
-async function selFont(el, font){
-  curFont = font;
-  document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  // 실제 카드에 들어갈 모든 텍스트로 폰트 로드 (한글 subset 대응)
-  try{
-    let allText='카드뉴스 생성기 by Darae 0123456789';
-    slides.forEach(s=>{ allText+=(s.title||'')+(s.subtitle||'')+(s.tag||''); });
-    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand||'';
-    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category||'';
-    allText+=brand+category;
-    await Promise.all([
-      document.fonts.load(`400 88px '${font}'`, allText),
-      document.fonts.load(`700 88px '${font}'`, allText),
-      document.fonts.load(`900 88px '${font}'`, allText),
-    ]);
-    await document.fonts.ready;
-    // 로드 후 짧게 대기 (렌더링 안정화)
-    await new Promise(r=>setTimeout(r,100));
-  }catch(e){}
-  if(slides.length){
-    const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
-    const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
-    canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
-    renderCards(); renderDetail();
-    showToast(`${font} 적용됐어요!`);
   }
 }
 
@@ -554,11 +589,11 @@ function drawSquareCard(ctx,slide,bgImg,brand,category){
   // 하단 텍스트 높이 계산
   const PAD=60;
   const pillH=(category&&category.trim())?48+20:0;
-  const TF=`900 80px 'Pretendard'`;
+  const TF=titleFontStr(80);
   ctx.font=TF;
   const tLines=wrapText(ctx,slide.title||'',TF,W-120).slice(0,2);
   const titleH=tLines.length*96;
-  const SF=`400 38px 'Pretendard'`;
+  const SF=subFontStr(38);
   ctx.font=SF;
   const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,SF,W-120).slice(0,1):[];
   const subH=sLines.length?sLines.length*50+8:0;
@@ -613,6 +648,7 @@ window.addEventListener('load',()=>{
   const k=localStorage.getItem('cnews_key');
   if(k) showApp(); else showSetup();
   renderThemeGrid();
+  renderFontRows();
   selAcct('avatarcourse');
   setTimeout(()=>{
     updateThemeArrows();
@@ -721,13 +757,7 @@ ${p.prompt}
     slides=JSON.parse(raw.replace(/```json|```/g,'').trim()).slides;
 
     document.getElementById('loadingMsg').textContent='배경 이미지 불러오는 중...';
-    try{
-      await Promise.all([
-        document.fonts.load(`${fw().title} 88px '${curFont}'`, '한글테스트가나다'),
-        document.fonts.load(`${fw().sub} 42px '${curFont}'`, '한글테스트가나다'),
-      ]);
-    }catch(e){}
-    await document.fonts.ready;
+    await loadCardFonts();
     const urls=await Promise.all(slides.map(sl=>fetchImg(sl.imgQuery||a.unsplash)));
     bgImgs=await Promise.all(urls.map(u=>loadImg(u)));
 
@@ -789,7 +819,7 @@ function drawBrand(ctx,brand,color){
 
 function drawTitle(ctx,text,color,curY){
   if(!text) return curY;
-  const font=`900 96px 'Pretendard'`;
+  const font=titleFontStr(96);
   ctx.font=font; ctx.fillStyle=color;
   ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=10;
   const lines=wrapText(ctx,text,font,CW-180).slice(0,2);
@@ -800,7 +830,7 @@ function drawTitle(ctx,text,color,curY){
 
 function drawSubtitle(ctx,text,color,curY){
   if(!text) return curY;
-  const font=`500 52px 'Pretendard'`;
+  const font=subFontStr(52);
   ctx.font=font; ctx.fillStyle=color;
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
   const lines=wrapText(ctx,text,font,CW-180).slice(0,2);
@@ -916,10 +946,10 @@ function drawTitleBlock(ctx, text, x, y, color, maxW){
   if(!text) return y;
   ctx.save();
   ctx.textBaseline='top';
-  const font=`900 88px 'Pretendard'`;
+  const font=titleFontStr(88);
   ctx.font=font; ctx.fillStyle=color||'#111';
   ctx.shadowColor='rgba(0,0,0,0.05)'; ctx.shadowBlur=4;
-  const lines=wrapText(ctx,text,`${fw().title} 88px '${curFont}'`,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=110; });
   ctx.shadowBlur=0;
@@ -931,9 +961,9 @@ function drawSubBlock(ctx, text, x, y, color, maxW){
   if(!text||!text.trim()) return y;
   ctx.save();
   ctx.textBaseline='top';
-  const font=`400 42px 'Pretendard'`;
+  const font=subFontStr(42);
   ctx.font=font; ctx.fillStyle=color||'rgba(30,30,30,0.55)';
-  const lines=wrapText(ctx,text,`${fw().title} 88px '${curFont}'`,maxW||CW-180).slice(0,2);
+  const lines=wrapText(ctx,text,font,maxW||CW-180).slice(0,2);
   let ty=y;
   lines.forEach(line=>{ ctx.fillText(line,x,ty); ty+=56; });
   ctx.restore();
@@ -1146,10 +1176,10 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
   ctx.beginPath(); ctx.moveTo(midX-120,midY-240); ctx.lineTo(midX+120,midY-240); ctx.stroke();
 
   // 초대형 제목 (중앙)
-  ctx.font=`900 120px 'Pretendard'`; ctx.fillStyle='#ffffff';
+  ctx.font=titleFontStr(120); ctx.fillStyle='#ffffff';
   ctx.textAlign='center';
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=20;
-  const tLines=wrapText(ctx,slide.title||'',`900 120px 'Pretendard'`,CW-80).slice(0,2);
+  const tLines=wrapText(ctx,slide.title||'',titleFontStr(120),CW-80).slice(0,2);
   let ty=midY-160+(2-tLines.length)*70;
   tLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=140;});
   ctx.shadowBlur=0;
@@ -1161,8 +1191,8 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
 
   // 부제목
   if(slide.subtitle){
-    ctx.font=`300 48px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
-    const sLines=wrapText(ctx,slide.subtitle,`300 48px 'Pretendard'`,CW-180).slice(0,2);
+    ctx.font=subFontStr(48); ctx.fillStyle='rgba(255,255,255,0.72)';
+    const sLines=wrapText(ctx,slide.subtitle,subFontStr(48),CW-180).slice(0,2);
     sLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=62;});
   }
 
@@ -1172,6 +1202,34 @@ function drawTypoCenterStyle(ctx,slide,bgImg,brand,category,t){
   ctx.font=`300 28px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='center';
   ctx.fillText(trimTags(slide.tag),midX,CH-40);
   ctx.textAlign='left';
+}
+
+// ══════════════════════════════════════
+// 스타일 5: 사이드바 (좌측 컬러 바 + 라이트)
+// ══════════════════════════════════════
+function drawSidebarBarStyle(ctx,slide,bgImg,brand,category,t){
+  ctx.fillStyle='#fafafa'; ctx.fillRect(0,0,CW,CH);
+  // 좌측 컬러 바
+  ctx.fillStyle='#111'; ctx.fillRect(0,0,28,CH);
+  // 브랜드
+  ctx.save(); ctx.textBaseline='top';
+  ctx.font=`500 28px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.42)';
+  ctx.textAlign='right'; ctx.fillText(brand||'',CW-90,88); ctx.restore(); ctx.textAlign='left';
+  // 이미지 (상단)
+  const imgH=Math.round(CH*0.40);
+  if(bgImg){
+    ctx.save(); ctx.beginPath(); ctx.roundRect(90,160,CW-180,imgH,16); ctx.clip();
+    fitImage(ctx,bgImg,90,160,CW-180,imgH); ctx.restore();
+  } else { ctx.fillStyle='#e5e5e5'; ctx.fillRect(90,160,CW-180,imgH); }
+  let y=160+imgH+44;
+  y=drawPill(ctx,category,90,y,false);
+  y=drawTitleBlock(ctx,slide.title,90,y,'#111111',CW-180);
+  y=drawDivLine(ctx,90,y,160,'rgba(0,0,0,0.10)');
+  y=drawSubBlock(ctx,slide.subtitle,90,y,'rgba(30,30,30,0.55)',CW-180);
+  if(slide.cta&&slide.cta.trim()){ drawCTADark(ctx,slide,90,y,CW-180); y+=90+28; }
+  ctx.save(); ctx.textBaseline='top';
+  ctx.font=`400 26px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.32)';
+  ctx.fillText(trimTags(slide.tag),90,y+4); ctx.restore();
 }
 
 // ══════════════════════════════════════
@@ -1220,8 +1278,8 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   // 제목 (중앙, textBaseline=top)
   ctx.save();
   ctx.textBaseline='top';
-  ctx.font=`900 88px 'Pretendard'`; ctx.fillStyle='#111';
-  const tLines=wrapText(ctx,slide.title||'',`900 88px 'Pretendard'`,CW-180).slice(0,2);
+  ctx.font=titleFontStr(88); ctx.fillStyle='#111';
+  const tLines=wrapText(ctx,slide.title||'',titleFontStr(88),CW-180).slice(0,2);
   tLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=110; });
   ctx.restore();
   y+=12;
@@ -1235,8 +1293,8 @@ function drawCircleImgStyle(ctx,slide,bgImg,brand,category,t){
   if(slide.subtitle&&slide.subtitle.trim()){
     ctx.save();
     ctx.textBaseline='top';
-    ctx.font=`400 42px 'Pretendard'`; ctx.fillStyle='rgba(30,30,30,0.55)';
-    const sLines=wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-180).slice(0,1);
+    ctx.font=subFontStr(42); ctx.fillStyle='rgba(30,30,30,0.55)';
+    const sLines=wrapText(ctx,slide.subtitle,subFontStr(42),CW-180).slice(0,1);
     sLines.forEach(line=>{ ctx.fillText(line,cx,y); y+=56; });
     ctx.restore();
     y+=12;
@@ -1296,9 +1354,9 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
   ctx.beginPath(); ctx.moveTo(midX-80,ty); ctx.lineTo(midX+80,ty); ctx.stroke(); ty+=52;
 
   // 큰 제목
-  ctx.font=`900 96px 'Pretendard'`; ctx.fillStyle='#ffffff';
+  ctx.font=titleFontStr(96); ctx.fillStyle='#ffffff';
   ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=12;
-  const tLines=wrapText(ctx,slide.title||'',`900 96px 'Pretendard'`,cardW-80).slice(0,2);
+  const tLines=wrapText(ctx,slide.title||'',titleFontStr(96),cardW-80).slice(0,2);
   tLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=112;});
   ctx.shadowBlur=0;
 
@@ -1308,8 +1366,8 @@ function drawCardOverlayStyle(ctx,slide,bgImg,brand,category,t){
 
   // 부제목
   if(slide.subtitle){
-    ctx.font=`400 44px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.72)';
-    const sLines=wrapText(ctx,slide.subtitle,`400 44px 'Pretendard'`,cardW-80).slice(0,2);
+    ctx.font=subFontStr(44); ctx.fillStyle='rgba(255,255,255,0.72)';
+    const sLines=wrapText(ctx,slide.subtitle,subFontStr(44),cardW-80).slice(0,2);
     sLines.forEach(line=>{ctx.fillText(line,midX,ty); ty+=58;});
   }
 
@@ -1350,13 +1408,13 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
 
   // 텍스트 높이 사전 계산 (위→아래)
   const pillH = (category&&category.trim()) ? 48+24 : 0;
-  const TF = `900 88px 'Pretendard'`;
+  const TF = titleFontStr(88);
   ctx.font=TF;
   const tLines=wrapText(ctx,slide.title||'',TF,CW-180).slice(0,2);
   const titleH = tLines.length*110+12;
   const divH = 3+32;
-  ctx.font=`400 42px 'Pretendard'`;
-  const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,`400 42px 'Pretendard'`,CW-180).slice(0,2):[];
+  ctx.font=subFontStr(42);
+  const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,subFontStr(42),CW-180).slice(0,2):[];
   const subH = sLines.length ? sLines.length*56+12 : 0;
   const ctaH = (slide.cta&&slide.cta.trim()) ? 90+28 : 0;
   const tagH = 40;
@@ -1372,7 +1430,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   // 제목
   ctx.save();
   ctx.textBaseline='top';
-  ctx.font=`${fw().title} 88px '${curFont}'`; ctx.fillStyle='#fff';
+  ctx.font=titleFontStr(88); ctx.fillStyle='#fff';
   ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
   tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=110; });
   ctx.shadowBlur=0;
@@ -1383,7 +1441,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   if(sLines.length){
     ctx.save();
     ctx.textBaseline='top';
-    ctx.font=`${fw().sub} 42px '${curFont}'`; ctx.fillStyle='rgba(255,255,255,0.72)';
+    ctx.font=subFontStr(42); ctx.fillStyle='rgba(255,255,255,0.72)';
     sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=56; });
     ctx.restore();
     y+=12;
