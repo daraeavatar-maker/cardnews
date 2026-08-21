@@ -29,7 +29,7 @@
   .app-screen{display:none;}
   .layout{display:flex;min-height:100vh;}
   .sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;}
-  .main{flex:1;padding:24px 28px;max-width:960px;}
+  .main{flex:1;padding:24px 28px;}
   .logo{display:flex;align-items:center;gap:10px;}
   .logo-mark{width:34px;height:34px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;}
   .logo-text{font-size:15px;font-weight:700;}
@@ -109,15 +109,16 @@
   /* 테마 미리보기 */
   .theme-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
   .theme-scroll::-webkit-scrollbar{display:none;}
-  .theme-card{flex-shrink:0;width:180px;cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,0.12);transition:all .2s;position:relative;}
+  .theme-card{flex-shrink:0;width:220px;cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,0.12);transition:all .2s;position:relative;}
   .theme-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
   .theme-card.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-b);}
-  .theme-card canvas{width:180px;height:225px;display:block;}
+  .theme-card canvas{width:220px;height:275px;display:block;}
   .theme-card-label{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);color:#fff;font-size:11px;font-weight:600;text-align:center;}
   .theme-card .zoom-hint{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);color:#fff;font-size:11px;padding:4px 10px;border-radius:20px;white-space:nowrap;backdrop-filter:blur(4px);}
   .theme-card:hover .zoom-hint{display:block;}
   /* 완성 카드 크게 보기 */
   .card-canvas{cursor:pointer;}
+  #sizeRow{display:flex;}
   .toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:100;}
   .toast.show{opacity:1;transform:translateY(0);}
   @media(max-width:640px){.layout{flex-direction:column;}.sidebar{width:100%;height:auto;position:static;}.main{padding:16px;}.form-row{flex-direction:column;}}
@@ -217,6 +218,11 @@
           <button class="tag-btn" onclick="selPlat(this,'clip')">클립</button>
           <button class="tag-btn" onclick="selPlat(this,'threads')">스레드</button>
         </div>
+        <div class="row-tags" style="margin-top:8px" id="sizeRow" style="display:none">
+          <span class="tag-lbl">사이즈:</span>
+          <button class="tag-btn active" id="size45" onclick="selSize(this,'4:5')">4:5 인스타 (1080×1350)</button>
+          <button class="tag-btn" id="size11" onclick="selSize(this,'1:1')">1:1 정사각형 (1080×1080)</button>
+        </div>
       </div>
 
       <div class="form-card">
@@ -260,6 +266,7 @@
         <div class="act-row">
           <button class="act-btn" onclick="generate()">↺ 다시 생성</button>
           <button class="act-btn" onclick="copyAll()">전체 텍스트 복사</button>
+          <button class="act-btn" id="squareDownloadBtn" style="display:none" onclick="downloadAllSquare()">⬜ 전체 정사각형 다운로드</button>
         </div>
       </div>
     </main>
@@ -312,7 +319,7 @@ const PLAT={
   threads:{name:'스레드',prompt:'플랫폼: 스레드\n알고리즘 핵심: 댓글과 공유.\n전략:\n- 1번: 공감 또는 논쟁 유발 질문\n- 중간: 대화체\n- 마지막: 열린 마무리, 의견 유도'}
 };
 
-let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white';
+let curAcct='avatarcourse', curPlat='instagram', curTheme='insta_dark', curPillStyle='white', curSize='4:5';
 let slides=[], selIdx=0, canvases=[], bgImgs=[];
 
 const THEME_PREVIEWS={
@@ -355,7 +362,7 @@ function renderThemeGrid(){
     if(fnMap[t.style]) fnMap[t.style](); else drawInstaDarkStyle(ctx,sampleSlide,null,sampleBrand,sampleCat,t);
     curTheme = savedTheme;
     curPillStyle = savedPill;
-    c.style.width = '180px'; c.style.height = '225px';
+    c.style.width = '220px'; c.style.height = '275px';
 
     // 확대 버튼
     const zoomHint = document.createElement('div');
@@ -405,8 +412,140 @@ function selAcct(id){
 
 function selPlat(el,id){
   curPlat=id;
-  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+  // 플랫폼 버튼만 active (size 버튼 제외)
+  document.querySelectorAll('.row-tags:first-of-type .tag-btn, .row-tags .tag-btn:not(#size45):not(#size11)').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
+  // 네이버블로그면 사이즈 선택 표시
+  const sizeRow=document.getElementById('sizeRow');
+  if(id==='naver_blog'){
+    sizeRow.style.display='flex';
+  } else {
+    sizeRow.style.display='none';
+    selSize(document.getElementById('size45'),'4:5');
+  }
+}
+
+function selSize(el,size){
+  curSize=size;
+  document.getElementById('size45').classList.remove('active');
+  document.getElementById('size11').classList.remove('active');
+  el.classList.add('active');
+}
+
+// 1:1 새로 그리기
+function downloadSquare(i){
+  const slide=slides[i];
+  const brand=document.getElementById('brandName').value.trim()||ACCOUNTS[curAcct].brand;
+  const category=document.getElementById('categoryTag').value.trim()||ACCOUNTS[curAcct].category;
+  const sq=document.createElement('canvas');
+  sq.width=1080; sq.height=1080;
+  const ctx=sq.getContext('2d');
+  // 1:1 전용 drawCard
+  drawSquareCard(ctx,slide,bgImgs[i],brand,category);
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    const win=window.open('','_blank');
+    if(win){
+      win.document.write(`<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;}img{max-width:100%;border-radius:8px;}p{color:#fff;font-family:sans-serif;font-size:14px;text-align:center;}</style></head><body><p>이미지를 <strong>길게 눌러</strong> 저장하세요</p><img src="${sq.toDataURL('image/png')}"/></body></html>`);
+      win.document.close();
+    }
+  } else {
+    const a=document.createElement('a');
+    a.download=`카드뉴스_1x1_${i+1}.png`;
+    a.href=sq.toDataURL('image/png');
+    a.click();
+  }
+}
+
+// 1:1 전용 카드 렌더링 (1080×1080)
+function drawSquareCard(ctx,slide,bgImg,brand,category){
+  const W=1080, H=1080;
+  const t=THEMES.find(x=>x.id===curTheme)||THEMES[0];
+
+  // 배경
+  if(bgImg){
+    const scale=Math.max(W/bgImg.width,H/bgImg.height);
+    const sw=bgImg.width*scale, sh=bgImg.height*scale;
+    ctx.drawImage(bgImg,(W-sw)/2,(H-sh)/2,sw,sh);
+  } else {
+    ctx.fillStyle='#111111'; ctx.fillRect(0,0,W,H);
+  }
+
+  // 그라디언트 (인스타감성 스타일 기준)
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,   'rgba(0,0,0,0)');
+  grad.addColorStop(0.30,'rgba(0,0,0,0)');
+  grad.addColorStop(0.55,'rgba(0,0,0,0.18)');
+  grad.addColorStop(0.75,'rgba(0,0,0,0.55)');
+  grad.addColorStop(1.0, 'rgba(0,0,0,0.88)');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+  // 브랜드 (우상단)
+  ctx.save();
+  ctx.textBaseline='top';
+  ctx.font=`500 28px 'Pretendard'`;
+  ctx.fillStyle='rgba(255,255,255,0.88)';
+  ctx.textAlign='right';
+  ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=6;
+  ctx.fillText(brand||'',W-80,80);
+  ctx.restore(); ctx.textAlign='left';
+
+  // 하단 텍스트 높이 계산
+  const PAD=60;
+  const pillH=(category&&category.trim())?48+20:0;
+  const TF=`900 80px 'Pretendard'`;
+  ctx.font=TF;
+  const tLines=wrapText(ctx,slide.title||'',TF,W-120).slice(0,2);
+  const titleH=tLines.length*96;
+  const SF=`400 38px 'Pretendard'`;
+  ctx.font=SF;
+  const sLines=slide.subtitle?wrapText(ctx,slide.subtitle,SF,W-120).slice(0,1):[];
+  const subH=sLines.length?sLines.length*50+8:0;
+  const tagH=36;
+  const totalH=PAD+pillH+titleH+subH+tagH+PAD;
+  let y=H-totalH;
+
+  // pill
+  if(category&&category.trim()){
+    ctx.save();
+    ctx.textBaseline='top';
+    ctx.font=`500 24px 'Pretendard'`;
+    const pc=getPillColors(curPillStyle||'white');
+    const pW=ctx.measureText(category).width+36; const pH=44;
+    ctx.fillStyle=pc.bg; ctx.globalAlpha=0.92;
+    roundRect(ctx,60,y,pW,pH,pH/2); ctx.fill();
+    ctx.strokeStyle=pc.border; ctx.lineWidth=1.5; ctx.globalAlpha=1;
+    roundRect(ctx,60,y,pW,pH,pH/2); ctx.stroke();
+    ctx.fillStyle=pc.text;
+    ctx.fillText(category,78,y+10);
+    ctx.restore();
+    y+=pH+20;
+  }
+
+  // 제목
+  ctx.save();
+  ctx.textBaseline='top';
+  ctx.font=TF; ctx.fillStyle='#fff';
+  ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8;
+  tLines.forEach(line=>{ ctx.fillText(line,60,y); y+=96; });
+  ctx.shadowBlur=0; ctx.restore();
+  y+=8;
+
+  // 부제목
+  if(sLines.length){
+    ctx.save();
+    ctx.textBaseline='top';
+    ctx.font=SF; ctx.fillStyle='rgba(255,255,255,0.78)';
+    sLines.forEach(line=>{ ctx.fillText(line,60,y); y+=50; });
+    ctx.restore(); y+=8;
+  }
+
+  // 태그
+  ctx.save();
+  ctx.textBaseline='top';
+  ctx.font=`300 24px 'Pretendard'`; ctx.fillStyle='rgba(255,255,255,0.45)';
+  ctx.fillText(slide.tag||'',60,y);
+  ctx.restore();
 }
 
 window.addEventListener('load',()=>{
@@ -529,6 +668,8 @@ ${p.prompt}
     canvases=slides.map((sl,i)=>drawCard(sl,i,slides.length,bgImgs[i],brand,category));
     selIdx=0;
     renderCards(); renderDetail(); setTimeout(updateCardsArrows,100);
+  const sqBtn=document.getElementById('squareDownloadBtn');
+  if(sqBtn) sqBtn.style.display=(curPlat==='naver_blog'&&curSize==='1:1')?'block':'none';
     document.getElementById('preview').style.display='block';
     document.getElementById('prevLabel').textContent=`카드 이미지 — ${a.name} · ${PLAT[curPlat].name}`;
   }catch(e){showErr('생성 실패: '+e.message);}
@@ -1231,6 +1372,15 @@ function renderCards(){
     const wrap=document.createElement('div'); wrap.className='card-wrap';
     wrap.appendChild(prev);
     wrap.appendChild(dlBtn);
+    // 네이버블로그 1:1 선택시 정사각형 다운로드 버튼 추가
+    if(curPlat==='naver_blog'&&curSize==='1:1'){
+      const sqBtn=document.createElement('button');
+      sqBtn.className='card-dl-btn';
+      sqBtn.textContent='⬜ 1:1 저장';
+      sqBtn.style.marginTop='2px';
+      sqBtn.addEventListener('click',()=>downloadSquare(i));
+      wrap.appendChild(sqBtn);
+    }
     wrap.appendChild(viewBtn);
     grid.appendChild(wrap);
   });
@@ -1300,6 +1450,11 @@ function downloadCard(i){
     const a=document.createElement('a');
     a.download=`카드뉴스_${i+1}.png`; a.href=dataUrl; a.click();
   }
+}
+
+function downloadAllSquare(){
+  slides.forEach((_,i)=>setTimeout(()=>downloadSquare(i),i*400));
+  showToast('정사각형 전체 다운로드 시작!');
 }
 
 function downloadAll(){
