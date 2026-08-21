@@ -948,7 +948,7 @@ function drawPill(ctx, text, x, y, dark, pillStyleOverride){
   ctx.fillStyle=pc.text;
   ctx.fillText(text, x+20, y+11);
   ctx.restore();
-  return y + pH + 10;
+  return y + pH + 16;
 }
 
 function drawTitleBlock(ctx, text, x, y, color, maxW){
@@ -1428,7 +1428,7 @@ function drawInstaDarkStyle(ctx,slide,bgImg,brand,category,t){
   ctx.textAlign='left';
 
   // 텍스트 높이 사전 계산 (위→아래)
-  const pillH = (category&&category.trim()) ? 48+10 : 0;
+  const pillH = (category&&category.trim()) ? 48+16 : 0;
   const TF = titleFontStr(88);
   applyTitleSpacing(ctx,88);
   ctx.font=TF;
